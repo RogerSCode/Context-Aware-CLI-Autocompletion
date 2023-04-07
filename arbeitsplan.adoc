@@ -1,1 +1,18 @@
-## Arbeitsplan
+## Arbeitsplan Bachelorarbeit
+
+### Ziel 
+Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
+
+### vor der Anmeldung
+
+- Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
+- Grundgerüst für die Autocomplete Funktion erstellen.
+
+### nach der Anmeldung
+
+- nicht ki basierte Autocomplete Funktion erstellen um einen vergleichswert zu haben.
+Ähnlich wie bei zsh
+
+
+- Ki Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+
