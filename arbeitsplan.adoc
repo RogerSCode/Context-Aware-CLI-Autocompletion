@@ -5,8 +5,14 @@ Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
 
 ### vor der Anmeldung
 
-- Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
-- Grundgerüst für die Autocomplete Funktion erstellen.
+* Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
+
+* Grundgerüst für die Autocomplete Funktion erstellen.
+    ** Funktion die die Eingabe des Users ausliest
+    ** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
+
+
+
 
 ### nach der Anmeldung
 
