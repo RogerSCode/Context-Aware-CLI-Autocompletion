@@ -10,6 +10,7 @@ Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
 * Grundgerüst für die Autocomplete Funktion erstellen.
     ** Funktion die die Eingabe des Users ausliest
     ** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
+    
 
 
 
