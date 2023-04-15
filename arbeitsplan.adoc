@@ -7,10 +7,11 @@ Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
 
 * Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
 * Auswahl der deutschen oder der englischen Sprache für die BA.
-* Grundgerüst für die Autocomplete Funktion erstellen.
+* Grundgerüst für die Autocomplete Funktion erstellen
+    ** fix bug that end script if space is pressed. Lösung ist IFS ändern.
     ** Minimum viable product
-    *** Funktion die die Eingabe des Users ausliest
-    *** History Function functioniert 
+    *** Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
+    *** History Function funktioniert 
     *** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
     ** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
     ** Richtige Darstellung des Terminalprompts (PS1)
@@ -24,5 +25,10 @@ Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
 Ähnlich wie bei zsh
 
 
+
+
 - Ki Alpacka anpassen um die Autocomplete Funktion zu nutzen.
 
+- Wie trainiere ich diese am besten? 
+- Wo bekomme ich Daten her? Ich könnte meine eigene Bashhistory benutzen. müsste da aber zu erst eine mit directory anlegen. Könnte aber auch freunde fragen ob sie mir helfen.
+- 
