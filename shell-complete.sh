@@ -18,3 +18,36 @@ record_history() {
     local command_so_far=$1
     echo "$current_directory $command_so_far" >> history.txt
 }    
+
+
+
+read_input() {
+  
+  text=""
+
+  while true
+   do
+    # Read a single character
+    tmp= $IFS
+    IFS="\n"
+    read -r -s -n 1 key
+    IFS= $tmp
+
+    if [[ $key = "" ]]; then
+      printf "\n"
+      eval "$text"
+      break
+    elif [[ $key = $'\x7f' ]]; then
+      # If the character is a backspace, remove the last character from the text string
+      text=${text%?}
+      printf '\b \b'
+    else
+      # Add the character to the text string and print it to the screen
+      text+=$key
+      printf "$key"
+    fi
+  done
+
+}
+
+read_input
