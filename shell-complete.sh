@@ -35,12 +35,17 @@ read_input() {
 
     if [[ $key = "" ]]; then
       printf "\n"
+      record_history "$text" # record the command history
       eval "$text"
       break
     elif [[ $key = $'\x7f' ]]; then
       # If the character is a backspace, remove the last character from the text string
       text=${text%?}
       printf '\b \b'
+    elif [[ $key = $'\x09' ]]; then
+      # If the character is a tab, complete the command
+      text=$(autocomplete "$text")
+      printf "$text"
     else
       # Add the character to the text string and print it to the screen
       text+=$key
