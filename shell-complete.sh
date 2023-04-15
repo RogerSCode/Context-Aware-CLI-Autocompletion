@@ -37,7 +37,7 @@ read_input() {
       printf "\n"
       record_history "$text" # record the command history
       eval "$text"
-      break
+      text=""
     elif [[ $key = $'\x7f' ]]; then
       # If the character is a backspace, remove the last character from the text string
       text=${text%?}
