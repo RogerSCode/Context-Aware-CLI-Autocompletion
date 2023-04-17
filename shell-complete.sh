@@ -19,19 +19,26 @@ record_history() {
     echo "$current_directory $command_so_far" >> history.txt
 }    
 
-
+read_key() {
+    local key
+    local tmp=$IFS
+    IFS="\n"
+    read -r -s -n 1 key
+    IFS=$tmp
+    echo "$key"
+}
 
 read_input() {
   
   text=""
-
+  
   while true
    do
+
     # Read a single character
-    tmp= $IFS
-    IFS="\n"
-    read -r -s -n 1 key
-    IFS= $tmp
+    key=$(read_key)
+
+
 
     if [[ $key = "" ]]; then
       printf "\n"
