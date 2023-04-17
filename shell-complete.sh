@@ -20,12 +20,30 @@ record_history() {
 }    
 
 read_key() {
+    # This function reads a single character from the keyboard
     local key
     local tmp=$IFS
     IFS="\n"
     read -r -s -n 1 key
     IFS=$tmp
     echo "$key"
+}
+
+execute_command(){
+  printf "\n" >&2
+  eval "$text" 
+  # history should only be recorded if the command was executed successfully 
+  #cuz it would not make sense to let the ai learn incorrect commands.
+
+  if [[ $? -ne 0 ]]; then
+    printf "Error: command not found: $text" >&2
+    printf "\n" >&2
+  else
+
+    record_history "$text"
+  fi
+  
+      
 }
 
 read_input() {
@@ -38,12 +56,8 @@ read_input() {
     # Read a single character
     key=$(read_key)
 
-
-
     if [[ $key = "" ]]; then
-      printf "\n"
-      record_history "$text" # record the command history
-      eval "$text"
+      execute_command
       text=""
     elif [[ $key = $'\x7f' ]]; then
       # If the character is a backspace, remove the last character from the text string
