@@ -2,19 +2,23 @@
 
 ### Ziel 
 Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
+### Berreits Erledigt
+
+
 
 ### vor der Anmeldung
 
 * Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
 * Auswahl der deutschen oder der englischen Sprache für die BA.
 * Grundgerüst für die Autocomplete Funktion erstellen
-    ** fix bug that end script if space is pressed. Lösung ist IFS ändern.
-    ** Minimum viable product
+    
+    ** Minimum viable product erstellen welches die Nutzung einer Autocomplete Funktion ermöglicht. Die Autocomplete Funktion kann hier jedoch noch ein dummy sein.
     *** Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
     *** History Function funktioniert 
     *** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
     ** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
     ** Richtige Darstellung des Terminalprompts (PS1)
+    ** Pfeiltastenfunktionen implementieren
 
 
 
@@ -25,10 +29,24 @@ Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
 Ähnlich wie bei zsh
 
 
+* Ki Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+** Das Training wird in jupyter notebook durchgeführt.
 
 
-- Ki Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+* Wo bekomme ich Daten her?
+** Meine Bash history
+** Ich frage Freunde ihre für mich aufzzeichnen
+** befehle aus mit hilfe der in PATH gespeicherten Befehle generieren.
 
-- Wie trainiere ich diese am besten? 
-- Wo bekomme ich Daten her? Ich könnte meine eigene Bashhistory benutzen. müsste da aber zu erst eine mit directory anlegen. Könnte aber auch freunde fragen ob sie mir helfen.
+
+
+* Wie groß sollte die Datenmenge sein?
+** groß genug sodas  die KI bessere ergebnisse liefert als die nicht ki basierte Autocomplete Funktion
+
+* WIe messe ich die Qualität der Autocomplete Funktion?
+** Die genutzte Metrik sollte besser sein als einfach nur zu sagen "Fühlt sich besser an"
+
+
+
+ 
 - 
