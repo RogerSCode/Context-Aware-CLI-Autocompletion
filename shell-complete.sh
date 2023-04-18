@@ -10,8 +10,6 @@ autocomplete() {
     printf "$possible_completion"
 }
 
-
-
 record_history() {
     # this function records the command history with the current directory the command was executed in
     local current_directory=$PWD
@@ -52,10 +50,12 @@ read_input() {
   
   while true
    do
+    # Display the current directory and prompt
+    printf "%s> " "$PWD"
 
     # Read a single character
     key=$(read_key)
-
+    echo $key
     if [[ $key = "" ]]; then
       execute_command
       text=""
@@ -77,3 +77,4 @@ read_input() {
 }
 
 read_input
+
