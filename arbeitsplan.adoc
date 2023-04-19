@@ -9,16 +9,16 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 
 * Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
 
+* History Function funktioniertnimmt die Validen Befehle auf. 
+
 ### vor der Anmeldung
 
 * Auswahl der deutschen oder der englischen Sprache für die BA.
 
-** Minimum viable product erstellen welches die Nutzung einer Autocomplete Funktion ermöglicht. Die Autocomplete Funktion kann hier jedoch noch ein dummy sein.
 
-*** History Function funktioniert
 *** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
 
-** Comfort Funktionen für die den Wrapper
+** Comfort Funktionen für die den Wrapper (niedrige Priorität)
 
 *** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
 
@@ -30,7 +30,11 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 Ähnlich wie bei ZSH
 
 * KI Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+
 ** Das Training wird in Jupyter Notebook durchgeführt.
+
+** Die KI gestützte Autocomplete Funktion wird in Python geschrieben. Der Grund hierfür ist das sämtliche dafür benötigten Bibliotheken in Python vorhanden sind.
+
 
 * Wo bekomme ich Daten her?
 ** Meine Bash history
