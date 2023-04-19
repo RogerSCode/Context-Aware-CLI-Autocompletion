@@ -1,52 +1,45 @@
 ## Arbeitsplan Bachelorarbeit
 
-### Ziel 
-Das erstellen einer Ki basierten  Autocomplete Funktion für das Terminal.
+### Ziel
+Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
+
 ### Berreits Erledigt
 
+* Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
 
+* Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
 
 ### vor der Anmeldung
 
-* Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
 * Auswahl der deutschen oder der englischen Sprache für die BA.
-* Grundgerüst für die Autocomplete Funktion erstellen
-    
-    ** Minimum viable product erstellen welches die Nutzung einer Autocomplete Funktion ermöglicht. Die Autocomplete Funktion kann hier jedoch noch ein dummy sein.
-    *** Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
-    *** History Function funktioniert 
-    *** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
-    ** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
-    ** Richtige Darstellung des Terminalprompts (PS1)
-    ** Pfeiltastenfunktionen implementieren
 
+** Minimum viable product erstellen welches die Nutzung einer Autocomplete Funktion ermöglicht. Die Autocomplete Funktion kann hier jedoch noch ein dummy sein.
 
+*** History Function funktioniert
+*** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
 
+** Comfort Funktionen für die den Wrapper
+
+*** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
+
+*** Pfeiltastenfunktionen implementieren
 
 ### nach der Anmeldung
 
-- nicht ki basierte Autocomplete Funktion erstellen um einen vergleichswert zu haben.
-Ähnlich wie bei zsh
+- nicht KI basierte Autocomplete Funktion erstellen, um einen Vergleichswert zu haben.
+Ähnlich wie bei ZSH
 
-
-* Ki Alpacka anpassen um die Autocomplete Funktion zu nutzen.
-** Das Training wird in jupyter notebook durchgeführt.
-
+* KI Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+** Das Training wird in Jupyter Notebook durchgeführt.
 
 * Wo bekomme ich Daten her?
 ** Meine Bash history
-** Ich frage Freunde ihre für mich aufzzeichnen
-** befehle aus mit hilfe der in PATH gespeicherten Befehle generieren.
-
-
+** Ich frage Freunde ihre für mich aufzeichnen
+** Befehle aus mit hilfe der in PATH gespeicherten Befehle generieren.
 
 * Wie groß sollte die Datenmenge sein?
-** groß genug sodas  die KI bessere ergebnisse liefert als die nicht ki basierte Autocomplete Funktion
+** groß genug, so das die KI bessere Ergebnisse liefert als die nicht KI basierte Autocomplete Funktion
 
-* WIe messe ich die Qualität der Autocomplete Funktion?
+* Wie messe ich die Qualität der Autocomplete Funktion?
 ** Die genutzte Metrik sollte besser sein als einfach nur zu sagen "Fühlt sich besser an"
 
-
-
- 
-- 
