@@ -6,8 +6,8 @@
 # Dummy autocomplete function
 autocomplete() {
     local command_so_far=$1
-    local possible_completion="ls -l"  # TODO: replace with real completion
-    printf "$possible_completion"
+    local possible_completion=$(python3 autocomplete.py "$command_so_far")
+    printf "${command_so_far}${possible_completion}"
 }
 
 record_history() {
@@ -44,6 +44,9 @@ execute_command(){
       
 }
 
+function clearline() {
+    echo -ne "\033[2K\r"
+}
 read_input() {
   
   text=""
@@ -51,11 +54,11 @@ read_input() {
   while true
    do
     # Display the current directory and prompt
-    printf "%s> " "$PWD"
+    #printf "%s> " "$PWD"
 
     # Read a single character
     key=$(read_key)
-    echo $key
+    
     if [[ $key = "" ]]; then
       execute_command
       text=""
@@ -66,6 +69,7 @@ read_input() {
     elif [[ $key = $'\x09' ]]; then
       # If the character is a tab, complete the command
       text=$(autocomplete "$text")
+      clearline
       printf "$text"
     else
       # Add the character to the text string and print it to the screen
