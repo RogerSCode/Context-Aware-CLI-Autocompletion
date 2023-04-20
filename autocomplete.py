@@ -14,7 +14,7 @@ for f in files:
 prefix = sys.argv[1]
 for command in commands:
     if command.startswith(prefix):
-        print(command)
+        print(command[len(prefix):])
         break        
 
 
