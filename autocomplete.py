@@ -1,5 +1,6 @@
 import os
 import glob
+import sys
 path = os.environ['PATH']
 paths = path.split(os.pathsep)
 files = []
@@ -10,6 +11,10 @@ commands = []
 for f in files:
     commands.append(f.rsplit('/', 1)[1])
 
-print(commands)
+prefix = sys.argv[1]
+for command in commands:
+    if command.startswith(prefix):
+        print(command)
+        break        
 
 
