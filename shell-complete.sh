@@ -50,17 +50,24 @@ execute_command(){
 function clearline() {
     echo -ne "\033[2K\r"
 }
+
+
+display_prompt(){
+  # This function displays the current directory and the prompt
+    clearline >&2
+    printf "%s> " "$PWD" >&2
+    printf "$text"  >&2
+}
+
 read_input() {
   
   text=""
   
   while true
    do
-    # Display the current directory and prompt
-    clearline
-    printf "%s> " "$PWD"
-    printf "$text"
 
+    # Display the current directory and prompt
+    display_prompt
 
     # Read a single character
     key=$(read_key)
