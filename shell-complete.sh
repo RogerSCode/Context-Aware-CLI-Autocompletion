@@ -44,6 +44,7 @@ execute_command(){
     record_history "$text"
   fi
   
+  text="" # clear the text for the next command
       
 }
 
@@ -74,7 +75,7 @@ read_input() {
     
     if [[ $key = "" ]]; then
       execute_command
-      text=""
+      
     elif [[ $key = $'\x7f' ]]; then
       # If the character is a backspace, remove the last character from the text string
       text=${text%?}
