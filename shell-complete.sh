@@ -6,7 +6,7 @@
 # Dummy autocomplete function
 autocomplete() {
     local command_so_far=$1
-    local possible_completion=$(python3 autocomplete.py "$command_so_far")
+    local possible_completion=$(python3 autocomplete.py "$command_so_far") #TODO check if python3 is correct command to call python 
     printf "${command_so_far}${possible_completion}"
 }
 
@@ -23,7 +23,10 @@ read_key() {
     local tmp=$IFS
     IFS="\n"
     read -r -s -n 1 key
+    
+  
     IFS=$tmp
+
     echo "$key"
 }
 
@@ -54,7 +57,10 @@ read_input() {
   while true
    do
     # Display the current directory and prompt
-    #printf "%s> " "$PWD"
+    clearline
+    printf "%s> " "$PWD"
+    printf "$text"
+
 
     # Read a single character
     key=$(read_key)
@@ -71,6 +77,15 @@ read_input() {
       text=$(autocomplete "$text")
       clearline
       printf "$text"
+    elif [[ "$key" == $'\x1b' ]]; then
+    read -rsn 2 key
+    case "$key" in
+      '[A') key="up" ;;
+      '[B') key="down" ;;
+      '[C') key="right" ;;
+      '[D') key="left" ;;
+      *) key="unknown" ;;
+    esac
     else
       # Add the character to the text string and print it to the screen
       text+=$key
