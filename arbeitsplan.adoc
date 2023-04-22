@@ -1,23 +1,34 @@
 ## Arbeitsplan Bachelorarbeit
 
+
+## Titel: context-aware CLI autocompletion
+
 ### Ziel
 Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
+
+### Nächster Termin für die Besprechung
+5 mai 10.00 uhr webex
 
 ### Berreits Erledigt
 
 * Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
 
-* Download und Testen der Ki Alpacka um zu schauen ob es local läuft.
+* Download und Testen der Ki Alpaca um zu schauen ob es local läuft.
 
 * History Function funktioniertnimmt die Validen Befehle auf. 
+
+*** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
 
 ### vor der Anmeldung
 
 * Auswahl der deutschen oder der englischen Sprache für die BA.
+    Ich nehme Englisch da sich mein workflow immer im Emglischen abspielt.
 
+* mehrere auswahlmoeglichkeiten fur die Antwort der  Autocomplete Funktion
 
-*** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
+*** moeglichkeit zumm Messen der
 
+* Die Autocomplete Funktion soll die Usereingabe mit der Autocomplete Funktion zusammenfügen.
 ** Comfort Funktionen für die den Wrapper (niedrige Priorität)
 
 *** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
@@ -29,7 +40,7 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 - nicht KI basierte Autocomplete Funktion erstellen, um einen Vergleichswert zu haben.
 Ähnlich wie bei ZSH
 
-* KI Alpacka anpassen um die Autocomplete Funktion zu nutzen.
+* KI Alpaca anpassen um die Autocomplete Funktion zu nutzen.
 
 ** Das Training wird in Jupyter Notebook durchgeführt.
 
@@ -38,12 +49,23 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 
 * Wo bekomme ich Daten her?
 ** Meine Bash history
+
 ** Ich frage Freunde ihre für mich aufzeichnen
-** Befehle aus mit hilfe der in PATH gespeicherten Befehle generieren.
+
+** Befehle aus mit hilfe der in PATH gespeicherten Befehle generieren. Dies wird jedoch schwierig da der Pfad mit einbezogen werden muss. Denn dieser ist weniger generisch als die Befehle selbst.
+
+** Von einer KI meinetwegen auch von GPT basierten KI generierte Befehle nutzen.
+
+
+** Wie viel finetuning muss ich machen? Denn Alpaca kann nach kurzem Test Terminal Befehle  erkennen und manchmal auch vervollständigen jedoch wird meist noch viel unnötiger Text mitgeliefert.
 
 * Wie groß sollte die Datenmenge sein?
-** groß genug, so das die KI bessere Ergebnisse liefert als die nicht KI basierte Autocomplete Funktion
+
+** groß genug, so das die KI bessere Ergebnisse liefert als die nicht KI basierte Autocomplete Funktion. 
+
+** Sollten Daten angemessen generiert werden können löst sich dieses Problem denn dann können bei Bedarf einfach mehr Daten generiert werden.
 
 * Wie messe ich die Qualität der Autocomplete Funktion?
+
 ** Die genutzte Metrik sollte besser sein als einfach nur zu sagen "Fühlt sich besser an"
 
