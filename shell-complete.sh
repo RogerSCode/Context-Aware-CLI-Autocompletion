@@ -17,6 +17,16 @@ record_history() {
     echo "$current_directory $command_so_far" >> history.txt
 }    
 
+most_recent_command() {
+    # this function reads the command history and returns the most recent command
+    local most_recent_command=$(tail -n 1 history.txt)
+    # remove the directory from the command
+    most_recent_command=${most_recent_command#* }
+    
+    echo "$most_recent_command"
+}
+
+
 read_key() {
     # This function reads a single character from the keyboard
     local key
@@ -43,7 +53,7 @@ execute_command(){
 
     record_history "$text"
   fi
-  
+
   text="" # clear the text for the next command
       
 }
@@ -62,7 +72,7 @@ display_prompt(){
 
 read_input() {
   
-  text=""
+  text="" # This variable stores the text that the user has typed
   
   while true
    do
@@ -75,7 +85,6 @@ read_input() {
     
     if [[ $key = "" ]]; then
       execute_command
-      
     elif [[ $key = $'\x7f' ]]; then
       # If the character is a backspace, remove the last character from the text string
       text=${text%?}
@@ -88,7 +97,7 @@ read_input() {
     elif [[ "$key" == $'\x1b' ]]; then
     read -rsn 2 key
     case "$key" in
-      '[A') key="up" ;;
+      '[A') text=$(most_recent_history) ;; #UP
       '[B') key="down" ;;
       '[C') key="right" ;;
       '[D') key="left" ;;
