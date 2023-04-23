@@ -58,7 +58,7 @@ execute_command(){
       
 }
 
-function clearline() {
+clearline() {
     echo -ne "\033[2K\r"
 }
 
@@ -95,9 +95,10 @@ read_input() {
       clearline
       printf "$text"
     elif [[ "$key" == $'\x1b' ]]; then
+    #handle arrow keys
     read -rsn 2 key
     case "$key" in
-      '[A') text=$(most_recent_history) ;; #UP
+      '[A') text=$(most_recent_history) ;; #UP displays last command
       '[B') key="down" ;;
       '[C') key="right" ;;
       '[D') key="left" ;;
