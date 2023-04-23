@@ -19,12 +19,16 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 
 *** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
 
-### vor der Anmeldung
-
 * Auswahl der deutschen oder der englischen Sprache für die BA.
     Ich nehme Englisch da sich mein workflow immer im Emglischen abspielt.
 
-* mehrere auswahlmoeglichkeiten fur die Antwort der  Autocomplete Funktion
+### vor der Anmeldung
+
+* Workflow fuer die KI Autocomplete Funktion erstellen.
+
+* Workflow fuer das Training der KI erstellen.
+
+* mehrere auswahlmoeglichkeiten fur die Antwort der  Autocomplete Funktion. Der code muss das geschriebene from predicteten erkennen.
 
 *** moeglichkeit zumm Messen der
 
@@ -34,6 +38,11 @@ Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 *** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
 
 *** Pfeiltastenfunktionen implementieren
+
+**** LEFT bewegt den cursdor nach links
+**** RIGHT bewegt den cursor nach rechts
+**** DOWN entfernt die vefollständigung und gibt die reine Usereingabe zurück
+
 
 ### nach der Anmeldung
 
