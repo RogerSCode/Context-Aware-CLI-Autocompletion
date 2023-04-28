@@ -98,7 +98,7 @@ read_input() {
     #handle arrow keys
     read -rsn 2 key
     case "$key" in
-      '[A') text=$(most_recent_history) ;; #UP displays last command
+      '[A') text=$(most_recent_command) ;; #UP displays last command
       '[B') key="down" ;;
       '[C') key="right" ;;
       '[D') key="left" ;;
