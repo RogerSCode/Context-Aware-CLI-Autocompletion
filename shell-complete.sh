@@ -6,7 +6,7 @@
 # Dummy autocomplete function
 autocomplete() {
     local command_so_far=$1
-    local possible_completion=$(python3 autocomplete.py "$command_so_far") #TODO check if python3 is correct command to call python 
+    local possible_completion=$(python3 heuristic_autocomplete.py "$command_so_far") #TODO check if python3 is correct command to call python 
     printf "${command_so_far}${possible_completion}"
 }
 
@@ -31,7 +31,7 @@ read_key() {
     # This function reads a single character from the keyboard
     local key
     local tmp=$IFS
-    IFS="\n"
+    IFS=""
     read -r -s -n 1 key
     
   
