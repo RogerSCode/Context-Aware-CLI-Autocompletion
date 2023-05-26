@@ -14,7 +14,7 @@ record_history() {
     # this function records the command history with the current directory the command was executed in
     local current_directory=$PWD
     local command_so_far=$1
-    python3 update_history.py "$current_directory" "$command_so_far"
+    python3 db/update_history.py "$current_directory" "$command_so_far"
     
 }    
 
