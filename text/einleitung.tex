@@ -1,0 +1,213 @@
+\section{The Model}\raggedbottom
+The Training of an LLM from scratch would be to cost/time intensive for this thesis so the use of a pretrained LLM is far more practical.
+
+
+\subsection{rejected models}
+
+
+
+
+\subsubsection{BERT}
+While BERT and BERT based model are small in size their word based approach limits its capability to complete words. Which makes it inadequit to for the task. This can be mitigated as loong as the word is known to the tokenizer.
+
+\subsubsection{GPT-3.5/GPT-4}
+While gpt based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make the impractibel for consumergrade computers. This can be cirkumvented by the use of the opeaiAPI but this is not free of charge and needs to sent data over the internet which prohibits its use with sensitive data and cannot be used on capsueld systems. 
+
+\subsection{why not LLama?} 
+(i need to answere this question)
+
+
+\subsection{accepted Models}
+
+\subsection{GPT-2}
+
+\subsection{Alpaka} 
+Stanfords Alpacka Model based on Metas LLama Model semes to be a good candidate.
+We will use the Alpaca-7B version because it is the smalest. 
+
+
+%\ifthenelse{\boolean{\biber}}{ % Beispiel um mit Biber zu zitieren (\citet und \citep)
+%	\citet{Con97} hat ein Buch geschrieben. Es gibt auch andere Arbeiten \citep{PeHe97} die referenziert sind. In Abbildung \ref{fig_Gallien} ist ein Sachverhalt dargestellt.
+
+
+%	1 Autor: \citet{Con97} \hspace*{1cm} \citep{Con97}\\
+%	2 Autoren: \citet{IWNLP} \hspace*{1cm} \citep{IWNLP}\\
+%	3 Autoren: \citet{liebeck-esau-conrad:2016:ArgMining2016} \hspace*{1cm} \citep{liebeck-esau-conrad:2016:ArgMining2016}
+
+%	Online resource: \citet{ILSVRC2016}
+%}{ %  Beispiel um klassisch zu zitieren (\cite)
+%	\cite{Con97} hat ein Buch geschrieben. Es gibt auch andere Arbeiten \cite{PeHe97} die referenziert sind. In Abbildung \ref{fig_Gallien} ist ein Sachverhalt dargestellt.
+
+
+%	1 Autor: \cite{Con97} \hspace*{1cm} \cite{Con97}\\
+%	2 Autoren: \cite{IWNLP} \hspace*{1cm} \cite{IWNLP}\\
+%	3 Autoren: \cite{liebeck-esau-conrad:2016:ArgMining2016} \hspace*{1cm} \cite{liebeck-esau-conrad:2016:ArgMining2016}
+
+%	Online resource: \cite{ILSVRC2016}
+%}
+
+%\ifthenelse{\equal{\sprache}{deutsch}}{
+%	\textbf{quotes}:\\
+%	Ein Beispiel für deutsche Anführungszeichen \glqq quote\grqq.
+%}{}
+
+%\begin{figure}[htb]
+%	\begin{center}
+%		\includegraphics[width=175pt, angle=270]{bilder/Galia}
+%		\caption{Gallien zur Zeit Caesars}\label{fig_Gallien}
+%	\end{center}
+%\end{figure}
+
+
+%\begin{table}[htb]
+%	\begin{center}
+%		\begin{tabular}{|l|l|l|}
+%			\hline
+%			Jahr  & Erster Consul        & Zweiter Consul        \\
+%			\hline \hline
+%			1     & C. Caesar            & L. Aemilius Paullus   \\
+%			2     & P. Vinicius          & P. Alfenus Varus      \\
+%			3     & L. Aelius Lamia      & M. Servilius          \\
+%			4     & Sex. Aelius Catus    & C. Sentius Saturninus \\
+%			5     & L. Valerius Messalla & Cn. Cornelius Cinna   \\
+%			suff. & C. Vibius Postumus   & C. Ateius Capito      \\
+%			6     & M. Aemilius Lepidus  & L. Arruntius          \\
+%			\hline
+%		\end{tabular}
+%		\caption{Römische Konsulen}\label{tab_Konsulen}
+%	\end{center}
+%\end{table}
+
+
+\pagebreak
+\section{tecnical background}
+Since the training of LLMs would take to much time and be very expensive.Therfore not feasable. We just have to use pretrained models.
+
+
+The models we use here are all transformerbased LLMs the reason for this is that the transformerarchitektur is the is the most powerful known architectur for language models and the defacto standart for all leading models
+
+The final limitation given the task of autocomletion is that we need a tokenbased model. A word based model would not suffice because these models are not abel to autocomplete words just sentences. The ability to complete words is substancial for the task at hand.
+
+\pagebreak
+
+
+
+\section{setup}\raggedbottom
+
+i used a Miniconda 3.1 enviroment
+
+\begin{itemize}
+\item \begin{verbatim}
+transformers-4.30.2-pyhd8ed1ab_1.conda
+\end{verbatim}
+
+\item \begin{verbatim}
+tokenizers-0.13.3-py38h7d131c9_0.conda
+\end{verbatim}
+  
+\end{itemize}
+
+
+
+
+
+
+list of commands used
+
+I used the following commands to autocomplete:
+"sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"
+
+It contains apt, python and git commands
+
+
+
+list prompt variations
+
+file_contexts = ["There are the following files in the current  directory: ", "Files:","These files are in this directory: " ]
+
+premises = ["You are an autocomplete function. ","This is a linux terminal. ","This is a linux terminal command. ","This is an autocomplete function. ",""]
+
+order = ["Autocomplete the following linux terminal command and provide no further explanation for the command: "]
+ 
+
+A number of prompt combinations have been tested and for simplicity we decided to choose the variation with the best outcome 
+
+
+the "You are an autocomplete function. " and "This is an autocomplete function. " tend to provide significantly worse results than other premises. There are less likely to produce a terminal command, but a text about said command.
+
+"This is a linux terminal command. " provides better output but tends to append an explanation of the command. "This is a linux terminal. " tends to provide the best solutions. 
+
+
+
+Path and file in the current directory are not specified in the final prompt because these are defined by the context.
+
+
+The file contexts show no significant differences, so "There are the following files in the current  directory: "is chosen to pick one for simplicity.
+
+
+
+So the final prompt is: "This is a linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>".
+
+
+\pagebreak
+\subsection{tests with gpt2}\raggedbottom
+
+The unfinetuned gpt2 was chosen for its small size of round 550mb. Which makes it runnable on a low resource machine without any further processing. 
+
+We used it with the Huggingface API since it is easy to use and the most popular API for such tasks. The "This is a linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>" prompt as decided on in the previous section was used.
+
+
+The model produced no valid commands while some of the git  completions resembled some git commands, none of them were valid.
+
+While the speed was sufficient, its failure to produce valid commands suggests that
+
+it is probably better to use a different model. 
+
+
+
+
+
+I tested two scenarios with the gpt2 model first the apt based commands that worked insofar that it predicted the most commonly used apt commands update and install also with a lot of followup text, however most apt based commands are independent from their context insofar that they don't rely on the path they are executed in. It also has to be noted that the model produced more text appended to the command 
+
+
+The git commands had way worse results. While trying to use the git  init command given the "git ini" was not able to predict the "t" of "init" correctly, and the "git c" wasn't able to predict anything near "git commit" not even  the "git comm" could predict "commit" most of the time even then not without a lot of unwanted text appended. The prepending of "Autocomplete the following terminal command:" seems to produce less unwanted text but still no usable output. 
+
+\subsection{test with alpaca-7b}
+While alpaca gives far better results, there are limits.
+
+
+A test without any prefix showed only nonsensical results.
+
+The apt commands often get completed into a text about apt based commands. While the ls command doesn't get interpreted as a command, presumably because it is short.
+
+The python based commands mostly get completed into nonsensical text. Sometimes with python commands with more letters of the word "python" gets interpreted as a type of snake, which is not surprising considering the training data probably contains more text about snakes than the programming language. The git based commands again get completed into nonsensical text.
+
+
+The added prefix  "This is a linux terminal. There are the following files in the current  directory:,Path:, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>" shows an improvement, with apt and ls commands, with the notable outlier "py" who gets completed to the misspelled "pyhton" following a text about python.
+
+The git based commands get completed in to nonfunctional git commands and text about these commands.
+
+
+If we add a path and files in the current directory as context, we still cannot produce valid commands.
+
+Noteworthy here is that sometimes the python commands dont get any completion at all.
+
+
+This suggests that the base model is not able to do it in a sufficient way. Which makes methods like Lora not viable 
+ to counter its slow speed and big size. Since it would lower its accuracy. 
+
+Therefore fine-tuning the model is the next logical step.
+
+\section{possible extensions}
+
+It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although since this could be a high amount of tokens, the computational power needed therefore would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
+
+
+A different model could also be tested. While this was written,  LLama2  was released by Meta. It is a successor of LLama which alpaca is based on. It was not used solely for the reason that it came out late in the writing of this thesis.
+
+
+
+
+
+
+\section{Sources}

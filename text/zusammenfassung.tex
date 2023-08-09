@@ -1,0 +1,21 @@
+%%% Die folgende Zeile nicht ändern!
+\section*{\ifthenelse{\equal{\sprache}{englisch}}{Abstract}}
+%%% Zusammenfassung:
+
+
+
+
+
+Stochastic Autocompletion systems for the terminal are nothing new, but the recent development of large-language-models(LLMs) allows for new approaches. These LLMs integrate world knowledge, leading to a potential spillover effect that can enhance autocompletion systems.
+
+
+While the completion of CLI (Command Line Interface) commands is possible, the intriguing question is whether using the path of command execution and the files contained in the current directory as additional context can improve the accuracy of completion predictions.
+
+For instance, the likelihood of using a git command in a Git repository is higher than in a downloads folder. Furthermore, a command beginning with 'git commit' is more likely to be succeeded by 'git push' than 'git pull'.
+
+The specific prompt can influence the outcome strongly. But an indepth look into this would exceed the scope of this thesis. So  the variety is only tested with a few examples.
+
+In terms of implementation, a local solution for autocompletion is preferred. This allows the system to operate effectively on encapsulated systems without needing internet access. Additionally, the computational power required should be considered. An autocompletion system containing an LLM that necessitates a high-end computer, although technically possible, would nullify its practicality.
+
+
+
