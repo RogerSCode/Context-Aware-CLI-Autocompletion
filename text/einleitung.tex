@@ -1,25 +1,106 @@
+
+\section{The Programm}
+For a practical application, we need a program that actually completes the commands.
+Ideally, the autocompletion integrates seamlessly with the normal usage of the command line interface. For the sake of this thesis, we have to limit our program to the base functionality. Which means that advanced functions like the coloring of the prompt are not implemented. Our approach here is to build a wrapper around the terminal interface taking the user input, handing it to the terminal interpreter and adding a completion if ordered to do so. The output of the command is displayed as usual.
+
+
+We chose to implement it on Linux for a bash shell. The reason for this is that aside from a pick one solution is that Linux among the major operating systems has the biggest focus on CLI usage and is even usable on Windows through the use of WSL.
+ 
+
+Shell script is chosen as the  language because it is able to run on most UNIX-like systems.
+
+
+Our script upon running presents us with a terminal prompt containing the current directory, which is also given to the autocompletion if along with the typed prompt by pressing the TAB key. The complete command can be executed like in a normal terminal by pressing the Enter key. 
+
+Another function is that the program records the executed command in a history database, this is separate from the normal history. The idea behind it is that these commands along with the path they were executed in can be used to fine-tune the used model if so desired.
+
+
+The autocompletion itself happens in a separate python file. The reason for this is that python offers better support for machine learning tasks compared to bash. This also offers the opportunity to use code from the model test with slight modifications.
+
+In the python file, the specific model is chosen in a config file, which can be changed by the user.
+The prompt template is modified by the directory and filenames is given to the model
+Then the model uses it as context to predict  a completion for the command.
+The predicted command is then returned.
+
+
+
 \section{The Model}\raggedbottom
 The Training of an LLM from scratch would be to cost/time intensive for this thesis so the use of a pretrained LLM is far more practical.
+
+Now  we come to the question: Which model to choose and why? 
+Since we want to complete cli commands we need a model that performs well on autocompletion tasks. So we preffer one whose architecture benefits such a task.
+
+From a financial perspective it should be free to use which limits the use of nonfree APIs.
+
+Since we want to use our autocompletion system on a 
+
+
+
+
+
+
+
+We choose the specific models according to the categories of size speed and accuracy of output. while these factors can be influenced by finetuning and methods like Lora. We choose the strategie to pick the models with the best baseline.
+
+For practical reasons we limit ourself to models that were publicated at the beginning of writing this thesis. So Models like LLama2 which was publicated during the writingprocces of this thesis were not considered.
 
 
 \subsection{rejected models}
 
 
-
-
 \subsubsection{BERT}
-While BERT and BERT based model are small in size their word based approach limits its capability to complete words. Which makes it inadequit to for the task. This can be mitigated as loong as the word is known to the tokenizer.
+Bidirectional Encoder Representations from Transformers or short BERT was introduced  2018  in BERT: Pre-training of Deep Bidirectional Transformers for
+Language Understanding \cite{devlin2019bert}. It was the first major Bidirectional model, which means it can use the context of right sided input in addition to left sided input. Unlike most previous models, which could only use left sided input.
 
-\subsubsection{GPT-3.5/GPT-4}
+ 
+ BERT's training data consists of two sources, the Bookscorpus and the English Wikipedia. The Bookscorpus is a dataset of textbooks containing approximately 800 million words, providing roughly one third of BERT's training data. The English Wikipedia dataset as its name implies contains texts from English Wikipedia articles limited to only the text passages. The lists, tables and headers have been removed.
+Its size consists of approximately 2500 million word which makes it the majority of BERT's training data. \cite{devlin2019bert}
+
+
+ Given the nature of an autocompletion task, this ability is not helpful. Since the model has to predict the entire right side of its input, there is no right side input it could use. So it would behave like a unidirectional model, losing its biggest architectural benefit.
+ 
+However, it is to note that BERT's bidirectional encoding during training and the so encoded knowledge can benefit the predictions  for situations where only one directional encoding is possible.
+
+The next point is that BERT is only able to use 512 tokens as context, which limits the size of its prompt length. While the template itself has a fixed number of tokens, the Path is of variable length. As well as the number of files.
+
+
+
+The last issue with this model is the way its encoder handles out-of-vocabulary(OOV) tokens. Since Bert's encoder works with a fixed vocabulary it will not be able to process words that are not in its vocabulary. This poses a huge issue for named entities. This would include the names of programs, with whom most terminal commands start. As well as the names of files and directories which are given as context to the model. 
+
+In our specific use case, this would mean that BERT could not use the given context and would be unable to complete some commands reasonably. 
+
+
+
+These arguments lead to the conclusion that BERT is not suitable for this task. Therefore, we reject its use.
+
+
+
+
+
+\subsubsection{GPT-3/GPT-4}
+
+GPT-3 was first published in "Language Models are Few-Shot Learners" on May 28, 2020
+by a group of researchers at OpenAI
+
 While gpt based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make the impractibel for consumergrade computers. This can be cirkumvented by the use of the opeaiAPI but this is not free of charge and needs to sent data over the internet which prohibits its use with sensitive data and cannot be used on capsueld systems. 
 
-\subsection{why not LLama?} 
-(i need to answere this question)
+\subsection{ LLama?} 
+wile the LLama model is good at generating text its dreivate Alpaca is better at understanding the context of a prompt it 
 
 
 \subsection{accepted Models}
 
 \subsection{GPT-2}
+ Generative Pre-trained Transformer 2 or short GPT-2 was introduced 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA}  . unlike BERT it is unidirectional
+Its Trainingdata consists of Bookcorpus and webtext thus containing the same trainingsdata as BERT. Additionaly it contains code from github and text from reddit.
+
+ autocompletion 
+ encoder
+ oov
+
+
+
+
 
 \subsection{Alpaka} 
 Stanfords Alpacka Model based on Metas LLama Model semes to be a good candidate.
@@ -86,13 +167,25 @@ Since the training of LLMs would take to much time and be very expensive.Therfor
 
 The models we use here are all transformerbased LLMs the reason for this is that the transformerarchitektur is the is the most powerful known architectur for language models and the defacto standart for all leading models
 
-The final limitation given the task of autocomletion is that we need a tokenbased model. A word based model would not suffice because these models are not abel to autocomplete words just sentences. The ability to complete words is substancial for the task at hand.
+
+
+
+
+
+The final limitation given the task of autocomletion is that we need a model with. A word based model would not suffice because these models are not abel to autocomplete words just sentences. The ability to complete words is substancial for the task at hand.
 
 \pagebreak
 
 
 
 \section{setup}\raggedbottom
+
+For reproducability we have to mention what kind of system and what kind of software
+was used.
+
+
+
+
 
 i used a Miniconda 3.1 enviroment
 
@@ -107,27 +200,92 @@ tokenizers-0.13.3-py38h7d131c9_0.conda
   
 \end{itemize}
 
+pip
+\begin{itemize}
+\item \begin{verbatim}
+numpy             1.25.0
+\end{verbatim}
+
+\item \begin{verbatim}
+typing_extensions 4.7.0
+\end{verbatim}
+  
+\end{itemize}
 
 
+python version  3.11.3
+
+system i testet it on 
+p
 
 
-
+\section{tests}
 list of commands used
-
-I used the following commands to autocomplete:
+We used the following commands to autocomplete:
 "sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"
+
+The reasons we chose these are to test four scenarios. First the relatievly context independent apt commands. Here we try to take a look how succesfull the autocompletion can be on a command that is not influenced by its context to have a comparrission with commands that are more influenced by their context.
+
+Second the relatievly short "ls" command to test how a very short command is predicted.
+
+Third python based commands that heavily relate to python files in the current directory. 
+
+
+Last git based commands that are influenced 
+
+
 
 It contains apt, python and git commands
 
+reasons why i used these
+tabelle fur die tests mit context
+
+\section{prompt template}
 
 
-list prompt variations
+The specific input to guide the behaviour of a machien learning model is caled "prompt". It is used as context by the model. The way the prompt is worded can heavily influence the behaviour of the model. Therefore we need a prompt that describes the tasks at hand. Which is to complete CLI-comands. There fore it is natural to simply tell the model what it is and what we want the model to do. 
 
-file_contexts = ["There are the following files in the current  directory: ", "Files:","These files are in this directory: " ]
 
-premises = ["You are an autocomplete function. ","This is a linux terminal. ","This is a linux terminal command. ","This is an autocomplete function. ",""]
+Giving a linux system as context has the advantage to give the model context which completion would be plausible. 
+But this limits its usage to system speciffic comands. To give an axemple of this the "ls" command would closer relate to  a linux terminal as the Windows/DOS equivalent "dir". This can easily be changed by replaceing the name of the system.
 
-order = ["Autocomplete the following linux terminal command and provide no further explanation for the command: "]
+
+
+
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Prompt Variations}
+    \begin{tabular}{|p{5cm}|p{8cm}|}
+        \hline
+        Premises & 
+        \begin{itemize}
+            \item You are an autocomplete function.
+            \item This is a Linux terminal.
+            \item This is a Linux terminal command.
+            \item This is an autocomplete function.
+        \end{itemize}
+        \\
+        \hline
+        Order & 
+        \begin{itemize}
+            \item Autocomplete the following Linux terminal command and provide no further explanation for the command:
+        \end{itemize}
+        \\
+        \hline
+        File Contexts & 
+        \begin{itemize}
+            \item There are the following files in the current directory:
+            \item Files:
+            \item These files are in this directory:
+        \end{itemize}
+        \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
  
 
 A number of prompt combinations have been tested and for simplicity we decided to choose the variation with the best outcome 
@@ -147,6 +305,9 @@ The file contexts show no significant differences, so "There are the following f
 
 
 So the final prompt is: "This is a linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>".
+
+
+Now that we have the prompt template we can tend to the 
 
 
 \pagebreak
@@ -211,3 +372,5 @@ A different model could also be tested. While this was written,  LLama2  was rel
 
 
 \section{Sources}
+
+paper für bert lama lama2 alpaca und wieso transformers die bestwe architectur sind einfügen
