@@ -1,4 +1,61 @@
 
+\section{Technical Background}
+Since the training of LLMs would take too much time and be very expensive, it's therefore not feasible. We just have to use pretrained models.
+
+
+ 
+
+The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017. Its novelty idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token. This allows a model to learn long-range dependencies between words in a sentence. Since then, it has been used to develop LLMs that surpass models based on earlier architectures.
+
+For this reason, we limit our choice of models to transformer-based models.
+
+This however is not the only thing we have to consider. Since our goal is to create an autocompletion system, we need models that excel in autocompletion tasks.
+
+
+We have to consider the model's memory footprint. While usage on a cloud system has no practical limits on memory size, locale systems are a different thing.
+Here we want a sufficiently small model.
+
+
+In terms of inference speed, we aim for real-time or near-real-time responses. For our       use case, the worst acceptable response time would be the variable time the user would need to just type the command. The additional response time in case of cloud based systems is not considered in this thesis.
+
+
+The final limitation given the task of autocompletion is that we need a model with subword based tokenization or similar. A word based model would not suffice because these models are not able to autocomplete words as well.
+
+\section{Setup}\raggedbottom
+For reproducibility we have to mention what kind of system and what kind of software was used.
+
+
+
+i used a Miniconda 3.1 enviroment
+
+\begin{itemize}
+\item \begin{verbatim}
+transformers-4.30.2-pyhd8ed1ab_1.conda
+\end{verbatim}
+
+\item \begin{verbatim}
+tokenizers-0.13.3-py38h7d131c9_0.conda
+\end{verbatim}
+  
+\end{itemize}
+
+pip
+\begin{itemize}
+\item \begin{verbatim}
+numpy             1.25.0
+\end{verbatim}
+
+\item \begin{verbatim}
+typing_extensions 4.7.0
+\end{verbatim}
+  
+\end{itemize}
+
+
+python version  3.11.3
+
+system i testet it on 
+
 \section{The Programm}
 For a practical application, we need a program that actually completes the commands.
 Ideally, the autocompletion integrates seamlessly with the normal usage of the command line interface. For the sake of this thesis, we have to limit our program to the base functionality. Which means that advanced functions like the coloring of the prompt are not implemented. Our approach here is to build a wrapper around the terminal interface taking the user input, handing it to the terminal interpreter and adding a completion if ordered to do so. The output of the command is displayed as usual.
@@ -25,27 +82,29 @@ The predicted command is then returned.
 
 
 \section{The Model}\raggedbottom
-The Training of an LLM from scratch would be to cost/time intensive for this thesis so the use of a pretrained LLM is far more practical.
+The Training of an LLM from scratch would be too  cost/time intensive for this thesis, so the use of a pretrained LLM is far more practical.
+
 
 Now  we come to the question: Which model to choose and why? 
-Since we want to complete cli commands we need a model that performs well on autocompletion tasks. So we preffer one whose architecture benefits such a task.
 
-From a financial perspective it should be free to use which limits the use of nonfree APIs.
+Since we want to complete CLI commands, we need a model that performs well on autocompletion tasks. So we prefer one whose architecture benefits such a task.
+
+
+From a financial perspective, it should be free to use, which limits the use of non-free APIs.
+
 
 Since we want to use our autocompletion system on a 
+<fullfill>
+
+<deprecated>
+We choose the specific models according to the categories of size speed and accuracy of output. While these factors can be influenced by fine-tuning and methods like Lora. We choose the strategie to pick the models with the best baseline.
+
+
+For practical reasons, we limit ourselves to models that were publicized at the beginning of writing this thesis. So models like LLaMA2 which was publicized during the writing process of this thesis were not considered.
 
 
 
-
-
-
-
-We choose the specific models according to the categories of size speed and accuracy of output. while these factors can be influenced by finetuning and methods like Lora. We choose the strategie to pick the models with the best baseline.
-
-For practical reasons we limit ourself to models that were publicated at the beginning of writing this thesis. So Models like LLama2 which was publicated during the writingprocces of this thesis were not considered.
-
-
-\subsection{rejected models}
+\subsection{Rejected Models}
 
 
 \subsubsection{BERT}
@@ -84,173 +143,105 @@ by a group of researchers at OpenAI
 
 While gpt based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make the impractibel for consumergrade computers. This can be cirkumvented by the use of the opeaiAPI but this is not free of charge and needs to sent data over the internet which prohibits its use with sensitive data and cannot be used on capsueld systems. 
 
-\subsection{ LLama?} 
-wile the LLama model is good at generating text its dreivate Alpaca is better at understanding the context of a prompt it 
+\subsubsection{LLaMA?} 
+LLaMA is a LLM first introduced 2023 in "LLaMA: Open and Efficient Foundation Language Models"\cite{touvron2023llama} . It is trained on a diverse set of  100\% openly available text data that is compatible with open sourcing\cite{touvron2023llama} .
 
 
-\subsection{accepted Models}
+\begin{table}[htbp]
+\centering
+\caption{Pre-training Data\cite{touvron2023llama}}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Dataset} & \textbf{Sampling prop.} & \textbf{Epochs} & \textbf{Disk size} \\
+\hline
+CommonCrawl & 67.0\% & 1.10 & 3.3 TB \\
+C4 & 15.0\% & 1.06 & 783 GB \\
+Github & 4.5\% & 0.64 & 328 GB \\
+Wikipedia & 4.5\% & 2.45 & 83 GB \\
+Books & 4.5\% & 2.23 & 85 GB \\
+ArXiv & 2.5\% & 1.06 & 92 GB \\
+StackExchange & 2.0\% & 1.03 & 78 GB \\
+\hline
+\end{tabular}
+\end{table}
 
-\subsection{GPT-2}
- Generative Pre-trained Transformer 2 or short GPT-2 was introduced 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA}  . unlike BERT it is unidirectional
-Its Trainingdata consists of Bookcorpus and webtext thus containing the same trainingsdata as BERT. Additionaly it contains code from github and text from reddit.
+LLaMAs architektur is based on the transformer architektur but levarages several improvments. Pre-normalization where the input is normalized before each sublayer instead  of just normalizing the output.It uses the Root Mean Square Layer Normalization\cite{zhang2019root}.
 
- autocompletion 
- encoder
- oov
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
-
+\[
+\norm{\mathbf{x}}_{\text{RMS}} = \sqrt{\frac{1}{n} \sum_{i=1}^n |\mathbf{x}_i|^2}
+\]
 
 
+The ReLU activation functions have been replaced with SwiGLU activation functions.
 
-\subsection{Alpaka} 
+
+\begin{equation}
+\text{SwiGLU}(x) = x \cdot \sigma(\beta x) + (1 - \sigma(\beta x)) \cdot x
+\end{equation}
+
+where \(\sigma(z) = \frac{1}{1 + e^{-z}}\) is the sigmoid function.
+
+Last the absolute positional embeddings have been replaced with rotary positional embeddings. It is faster than absolute positional embeddings and dosen't add significant computational overhead. This is benficial for our usecas of generating completions in real-time.The reason for this is that it does not need to learn  a separate embedding for each position in the sequence. Since it does not assume that the positions of tokens in a sequence are independent of each other, it is more capable of learning long-range dependencies between tokens. This also removes the maximum limit of tokens a model can use as input. In other words our prompt can be as long as we like so there is no limit on the length of our prompt template and the information we can give it. But it is importent to note that the limit of quadratic growth of needed computational resources 
+relative to the sequrnce length remains.
+
+
+
+Its tokenizer uses byte-pair-encoding\cite{touvron2023llama}. The authors didn't use their own implementation instead they used the implementation from Sentence-Piece \cite{kudo2018sentencepiece}
+
+
+
+
+
+
+\subsection{Accepted Models}
+
+\subsubsection{GPT-2}
+Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA} . Unlike BERT, it is unidirectional.
+
+Its Training data consists of Bookcorpus and Webtext thus containing the same training data as BERT. Additionally, it contains code from GitHub and text from Reddit.
+
+
+It utilizes byte pair encoding (BPE) as an encoding method, which is a form of subword tokenization. This process works by repeatedly merging the most common tokens. 
+This way the most common words will be represented as single tokens while less common words will be split into subwords. This way words that are OOV can be split into repetitively till known tokens are reached. This way unknown words can be handled based on their subwords.
+
+
+
+
+
+\subsubsection{Alpaka} 
 Stanfords Alpacka Model based on Metas LLama Model semes to be a good candidate.
 We will use the Alpaca-7B version because it is the smalest. 
 
 
-%\ifthenelse{\boolean{\biber}}{ % Beispiel um mit Biber zu zitieren (\citet und \citep)
-%	\citet{Con97} hat ein Buch geschrieben. Es gibt auch andere Arbeiten \citep{PeHe97} die referenziert sind. In Abbildung \ref{fig_Gallien} ist ein Sachverhalt dargestellt.
-
-
-%	1 Autor: \citet{Con97} \hspace*{1cm} \citep{Con97}\\
-%	2 Autoren: \citet{IWNLP} \hspace*{1cm} \citep{IWNLP}\\
-%	3 Autoren: \citet{liebeck-esau-conrad:2016:ArgMining2016} \hspace*{1cm} \citep{liebeck-esau-conrad:2016:ArgMining2016}
-
-%	Online resource: \citet{ILSVRC2016}
-%}{ %  Beispiel um klassisch zu zitieren (\cite)
-%	\cite{Con97} hat ein Buch geschrieben. Es gibt auch andere Arbeiten \cite{PeHe97} die referenziert sind. In Abbildung \ref{fig_Gallien} ist ein Sachverhalt dargestellt.
-
-
-%	1 Autor: \cite{Con97} \hspace*{1cm} \cite{Con97}\\
-%	2 Autoren: \cite{IWNLP} \hspace*{1cm} \cite{IWNLP}\\
-%	3 Autoren: \cite{liebeck-esau-conrad:2016:ArgMining2016} \hspace*{1cm} \cite{liebeck-esau-conrad:2016:ArgMining2016}
-
-%	Online resource: \cite{ILSVRC2016}
-%}
-
-%\ifthenelse{\equal{\sprache}{deutsch}}{
-%	\textbf{quotes}:\\
-%	Ein Beispiel für deutsche Anführungszeichen \glqq quote\grqq.
-%}{}
-
-%\begin{figure}[htb]
-%	\begin{center}
-%		\includegraphics[width=175pt, angle=270]{bilder/Galia}
-%		\caption{Gallien zur Zeit Caesars}\label{fig_Gallien}
-%	\end{center}
-%\end{figure}
-
-
-%\begin{table}[htb]
-%	\begin{center}
-%		\begin{tabular}{|l|l|l|}
-%			\hline
-%			Jahr  & Erster Consul        & Zweiter Consul        \\
-%			\hline \hline
-%			1     & C. Caesar            & L. Aemilius Paullus   \\
-%			2     & P. Vinicius          & P. Alfenus Varus      \\
-%			3     & L. Aelius Lamia      & M. Servilius          \\
-%			4     & Sex. Aelius Catus    & C. Sentius Saturninus \\
-%			5     & L. Valerius Messalla & Cn. Cornelius Cinna   \\
-%			suff. & C. Vibius Postumus   & C. Ateius Capito      \\
-%			6     & M. Aemilius Lepidus  & L. Arruntius          \\
-%			\hline
-%		\end{tabular}
-%		\caption{Römische Konsulen}\label{tab_Konsulen}
-%	\end{center}
-%\end{table}
-
 
 \pagebreak
-\section{tecnical background}
-Since the training of LLMs would take to much time and be very expensive.Therfore not feasable. We just have to use pretrained models.
 
-
-The models we use here are all transformerbased LLMs the reason for this is that the transformerarchitektur is the is the most powerful known architectur for language models and the defacto standart for all leading models
-
-
-
-
-
-
-The final limitation given the task of autocomletion is that we need a model with. A word based model would not suffice because these models are not abel to autocomplete words just sentences. The ability to complete words is substancial for the task at hand.
 
 \pagebreak
 
 
 
-\section{setup}\raggedbottom
-
-For reproducability we have to mention what kind of system and what kind of software
-was used.
 
 
 
 
 
-i used a Miniconda 3.1 enviroment
+\section{Prompt Template}
 
-\begin{itemize}
-\item \begin{verbatim}
-transformers-4.30.2-pyhd8ed1ab_1.conda
-\end{verbatim}
 
-\item \begin{verbatim}
-tokenizers-0.13.3-py38h7d131c9_0.conda
-\end{verbatim}
+The specific input to guide the behavior of a machine learning model is called a "prompt". The model uses it as context. The way the prompt is worded can heavily influence the behavior of the model. Therefore, we need a prompt that accurately describes the tasks at hand. Which is to complete CLI commands. Therefore, it makes sense to simply tell the model what it is and what we want the model to do. 
+
+
+
+Providing a Linux system as context has the advantage to give the model context which completion would be plausible. 
+
+But this limits its usage to system specific commands. To give an example of this, the "ls" command would closer relate to  a Linux terminal as the Windows/DOS equivalent "dir". This can easily be adjusted by replacing the system's name in the prompt.
+
+
+
   
-\end{itemize}
-
-pip
-\begin{itemize}
-\item \begin{verbatim}
-numpy             1.25.0
-\end{verbatim}
-
-\item \begin{verbatim}
-typing_extensions 4.7.0
-\end{verbatim}
-  
-\end{itemize}
-
-
-python version  3.11.3
-
-system i testet it on 
-p
-
-
-\section{tests}
-list of commands used
-We used the following commands to autocomplete:
-"sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"
-
-The reasons we chose these are to test four scenarios. First the relatievly context independent apt commands. Here we try to take a look how succesfull the autocompletion can be on a command that is not influenced by its context to have a comparrission with commands that are more influenced by their context.
-
-Second the relatievly short "ls" command to test how a very short command is predicted.
-
-Third python based commands that heavily relate to python files in the current directory. 
-
-
-Last git based commands that are influenced 
-
-
-
-It contains apt, python and git commands
-
-reasons why i used these
-tabelle fur die tests mit context
-
-\section{prompt template}
-
-
-The specific input to guide the behaviour of a machien learning model is caled "prompt". It is used as context by the model. The way the prompt is worded can heavily influence the behaviour of the model. Therefore we need a prompt that describes the tasks at hand. Which is to complete CLI-comands. There fore it is natural to simply tell the model what it is and what we want the model to do. 
-
-
-Giving a linux system as context has the advantage to give the model context which completion would be plausible. 
-But this limits its usage to system speciffic comands. To give an axemple of this the "ls" command would closer relate to  a linux terminal as the Windows/DOS equivalent "dir". This can easily be changed by replaceing the name of the system.
-
-
-
 
 
 
@@ -288,7 +279,7 @@ But this limits its usage to system speciffic comands. To give an axemple of thi
 
  
 
-A number of prompt combinations have been tested and for simplicity we decided to choose the variation with the best outcome 
+A number of prompt combinations have been tested and for simplicity we decided to choose the variation that provided the best outcome 
 
 
 the "You are an autocomplete function. " and "This is an autocomplete function. " tend to provide significantly worse results than other premises. There are less likely to produce a terminal command, but a text about said command.
@@ -309,7 +300,29 @@ So the final prompt is: "This is a linux terminal. There are the following files
 
 Now that we have the prompt template we can tend to the 
 
+\section{tests}
+List of commands used
 
+We used the following commands to autocomplete:
+
+"sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"
+
+
+The reasons we chose these are to test four scenarios. First, the relative context independent apt commands. Here we try to take a look how successful the autocompletion can be on a command that is not influenced by its context to have a comparison with commands that are more influenced by their context.
+
+
+Second, the  "ls" command. The goal here is to see what happens when the models have to handle very short commands or, in other words, have few tokens to work with.
+
+
+Third, python based commands. The python command is supposed to run python code, this can be in an interactive shell or a python script. While the interactive shell isn't that reliant on context, the running of a python script is. A prediction in this case would only be viable if the predicted file is a python file present in the current directory, not accounting for possible parameters given to the script.
+
+
+
+Last git based commands. The git commands are heavily influenced depending on where 
+
+they are run
+
+tabelle fur die tests mit context
 \pagebreak
 \subsection{tests with gpt2}\raggedbottom
 
@@ -361,16 +374,19 @@ Therefore fine-tuning the model is the next logical step.
 
 \section{possible extensions}
 
+
+
+
 It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although since this could be a high amount of tokens, the computational power needed therefore would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
 
 
 A different model could also be tested. While this was written,  LLama2  was released by Meta. It is a successor of LLama which alpaca is based on. It was not used solely for the reason that it came out late in the writing of this thesis.
 
+fientuning the tested models
 
 
 
 
 
-\section{Sources}
 
-paper für bert lama lama2 alpaca und wieso transformers die bestwe architectur sind einfügen
+

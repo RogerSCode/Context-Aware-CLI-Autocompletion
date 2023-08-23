@@ -6,75 +6,32 @@
 ### Ziel
 Das erstellen einer Ki basierten Autocomplete Funktion für das Terminal.
 
-### Nächster Termin für die Besprechung
-5 mai 10.00 uhr webex
-
 ### Berreits Erledigt
 
-* Wrapper der die Usereingabe mit der Autocomplete Funktion zusammenfügt.
+britisch oder american englisch
 
-* Download und Testen der Ki Alpaca um zu schauen ob es local läuft.
+Richtiges format fur den Seitenabstand finden
 
-* History Function funktioniertnimmt die Validen Befehle auf. 
+Wie viele Seiten weerden verlangt?
 
-*** Grundlegende Autocomplete Funktion erstellen die über die Dummyfunktion hinnaus geht.
+bei zitaten welchen Autornamen verwenden wenn es mehrere sind?
 
-* Auswahl der deutschen oder der englischen Sprache für die BA.
-    Ich nehme Englisch da sich mein workflow immer im Emglischen abspielt.
+wenn das paper mehrere versionen hat welche wird verwendet? besonders bei Attention is all zou need
 
-### vor der Anmeldung
+welche dateien muss die komplette ba enthalten?
 
-* Workflow fuer die KI Autocomplete Funktion erstellen.
+Freitag 1. september 12uhr
 
-* Workflow fuer das Training der KI erstellen.
-
-* mehrere auswahlmoeglichkeiten fur die Antwort der  Autocomplete Funktion. Der code muss das geschriebene from predicteten erkennen.
-
-*** moeglichkeit zumm Messen der
-
-* Die Autocomplete Funktion soll die Usereingabe mit der Autocomplete Funktion zusammenfügen.
-** Comfort Funktionen für die den Wrapper (niedrige Priorität)
-
-*** Funktion die die Textfarbe der sugerierten Wörter ändert. um die Autocompleteten Wörter zu verdeutlichen.
-
-*** Pfeiltastenfunktionen implementieren
-
-**** LEFT bewegt den cursdor nach links
-**** RIGHT bewegt den cursor nach rechts
-**** DOWN entfernt die vefollständigung und gibt die reine Usereingabe zurück
+abstract als introduction nehmen 
 
 
-### nach der Anmeldung
-
-- nicht KI basierte Autocomplete Funktion erstellen, um einen Vergleichswert zu haben.
-Ähnlich wie bei ZSH
-
-* KI Alpaca anpassen um die Autocomplete Funktion zu nutzen.
-
-** Das Training wird in Jupyter Notebook durchgeführt.
-
-** Die KI gestützte Autocomplete Funktion wird in Python geschrieben. Der Grund hierfür ist das sämtliche dafür benötigten Bibliotheken in Python vorhanden sind.
+https://github.com/ggerganov/llama.cpp
 
 
-* Wo bekomme ich Daten her?
-** Meine Bash history
-
-** Ich frage Freunde ihre für mich aufzeichnen
-
-** Befehle aus mit hilfe der in PATH gespeicherten Befehle generieren. Dies wird jedoch schwierig da der Pfad mit einbezogen werden muss. Denn dieser ist weniger generisch als die Befehle selbst.
-
-** Von einer KI meinetwegen auch von GPT basierten KI generierte Befehle nutzen.
+https://github.com/abetlen/llama-cpp-python
 
 
-** Wie viel finetuning muss ich machen? Denn Alpaca kann nach kurzem Test Terminal Befehle  erkennen und manchmal auch vervollständigen jedoch wird meist noch viel unnötiger Text mitgeliefert.
 
-* Wie groß sollte die Datenmenge sein?
 
-** groß genug, so das die KI bessere Ergebnisse liefert als die nicht KI basierte Autocomplete Funktion. 
 
-** Sollten Daten angemessen generiert werden können löst sich dieses Problem denn dann können bei Bedarf einfach mehr Daten generiert werden.
-
-* Wie messe ich die Qualität der Autocomplete Funktion?
-
-** Die genutzte Metrik sollte besser sein als einfach nur zu sagen "Fühlt sich besser an"
-
+## plan fur heute 
