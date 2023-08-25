@@ -1,32 +1,72 @@
-
+\section{Introduction}
 \section{Technical Background}
-Since the training of LLMs would take too much time and be very expensive, it's therefore not feasible. We just have to use pretrained models.
+
+The training of high-end Large-Language-Models (LLM's) can be very expensive \cite{sharir2020cost}. Therefore training one from scratch is not feasible.
+The solution to this issue is to resort to pre-trainded LLM's. 
 
 
- 
+\subsection{Transformer Architecture}
+The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017, which has since become a foundational building block for many state-of-the-art models. They were designed to handle sequential data, making them particularly effective for NLP tasks. Unlike earlier architectures like recurrent neural networks (RNNs) or long short-term memory (LSTM) networks, transformers can process data in parallel rather than sequentially and can outperform those.
+Its novelty idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token, in other words, focusing on their relevance. This allows a model to learn long-range dependencies between words in a sentence. The transformer model consists of an encoder and a decoder. The Encoder converts the input into a set of vectors representing the semantic information. Positional encoding vectors are added to the embedding vectors to give the model the ability to deduce the distance between two tokens so that the model has information about the position of each token. This is needed because transformers don't process data sequentially. 
+Decoding is the process of generating output from the encoded input. In the transformer architecture, this process is autoregressive, which means that the model generates one token at a time. Each new token is  used together with the previous tokens to generate 
+another token. This is repeated till the end of the sequence is reached.
+The order of the tokens is encoded with the addition of positional encodings similar to the encoder.
 
-The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017. Its novelty idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token. This allows a model to learn long-range dependencies between words in a sentence. Since then, it has been used to develop LLMs that surpass models based on earlier architectures.
-
+Since then, it has been used to develop LLMs that set a new standard for NLP tasks.
 For this reason, we limit our choice of models to transformer-based models.
 
+
+
+
+
+
 This however is not the only thing we have to consider. Since our goal is to create an autocompletion system, we need models that excel in autocompletion tasks.
+
+
+
+\subsection{Computational Resources}
+
+
+There are two cases for application, on a locale machine and in the cloud.
+
 
 
 We have to consider the model's memory footprint. While usage on a cloud system has no practical limits on memory size, locale systems are a different thing.
 Here we want a sufficiently small model.
 
-
 In terms of inference speed, we aim for real-time or near-real-time responses. For our       use case, the worst acceptable response time would be the variable time the user would need to just type the command. The additional response time in case of cloud based systems is not considered in this thesis.
 
-
 The final limitation given the task of autocompletion is that we need a model with subword based tokenization or similar. A word based model would not suffice because these models are not able to autocomplete words as well.
+
 
 \section{Setup}\raggedbottom
 For reproducibility we have to mention what kind of system and what kind of software was used.
 
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Item} & \textbf{Specification} \\
+\hline
+Laptop Model & ThinkPad L590 \\
+\hline
+Operating System & Ubuntu 22.04.3 LTS x86\_64 \\
+\hline
+CPU & Intel i7-8565U (8) @ 4.600GHz \\
+\hline
+RAM & 16Gb \\
+\hline
+\end{tabular}
+\caption{GPT-2 Test Specifications }
+\end{table}
 
+the Alpaca test were performed on Hilbert.
 
-i used a Miniconda 3.1 enviroment
+%Ubuntu 22.04.3 LTS x86_64
+%ThinkPad L590
+%Intel i7-8565U (8) @ 4.600GHz 
+
+We used a Miniconda 3.1 enviroment
 
 \begin{itemize}
 \item \begin{verbatim}
@@ -54,7 +94,7 @@ typing_extensions 4.7.0
 
 python version  3.11.3
 
-system i testet it on 
+
 
 \section{The Programm}
 For a practical application, we need a program that actually completes the commands.
@@ -147,6 +187,7 @@ While gpt based models as of now are considered to be the best LLMs. Their size 
 LLaMA is a LLM first introduced 2023 in "LLaMA: Open and Efficient Foundation Language Models"\cite{touvron2023llama} . It is trained on a diverse set of  100\% openly available text data that is compatible with open sourcing\cite{touvron2023llama} .
 
 
+
 \begin{table}[htbp]
 \centering
 \caption{Pre-training Data\cite{touvron2023llama}}
@@ -164,6 +205,12 @@ StackExchange & 2.0\% & 1.03 & 78 GB \\
 \hline
 \end{tabular}
 \end{table}
+
+The datasets have been preprocessed. The English CommonCrawl  was deduplicated at the line level, and non-English pages and pages not reverenced in Wikipedia have been removed. C4 has been deduplicated and filtered with heuristics like the presence of punctuation and number of words on a webpage. GitHub projects that are distributed under Apache BSD and MIT licenses were used Low quality code and boilerplatecode were removed.
+Wikipedia dumps from the June-August 2022 period, covering the languages: bg, ca, cs, da, de, en, es, fr, hr, hu, it, nl, pl, pt, ro, ru, sl, sr, sv, uk. Hyperlinks comments and formatting boilerplate have been removed.The Gutenberg Project corpus and Books3 corpus have been deduplicated and books with an 90\% overlap have been removed. 
+ArXiv Latex files have been filtered by removing anything before the first section, as well as the bibliography. Stack Exchange data includes the high quality questions and answers. 
+
+
 
 LLaMAs architektur is based on the transformer architektur but levarages several improvments. Pre-normalization where the input is normalized before each sublayer instead  of just normalizing the output.It uses the Root Mean Square Layer Normalization\cite{zhang2019root}.
 
@@ -193,8 +240,6 @@ Its tokenizer uses byte-pair-encoding\cite{touvron2023llama}. The authors didn't
 
 
 
-
-
 \subsection{Accepted Models}
 
 \subsubsection{GPT-2}
@@ -207,10 +252,10 @@ It utilizes byte pair encoding (BPE) as an encoding method, which is a form of s
 This way the most common words will be represented as single tokens while less common words will be split into subwords. This way words that are OOV can be split into repetitively till known tokens are reached. This way unknown words can be handled based on their subwords.
 
 
+ 
 
 
-
-\subsubsection{Alpaka} 
+\subsubsection{Alpaca} 
 Stanfords Alpacka Model based on Metas LLama Model semes to be a good candidate.
 We will use the Alpaca-7B version because it is the smalest. 
 
@@ -385,8 +430,9 @@ A different model could also be tested. While this was written,  LLama2  was rel
 fientuning the tested models
 
 
+more Scenarios to test more variations 
+other alpaca versions and 
 
-
-
+Stanfords Alpaca model was created on the 7B version of LLaMA. LLaMA has bigger versions.  Since the code for the traings process and the used trainings data are publicate by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. While the process of fine-tuning the larger models is more expensive than the finetuning of the 7B version 
 
 
