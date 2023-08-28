@@ -1,4 +1,31 @@
 \section{Introduction}
+
+Stochastic Autocompletion systems for the terminal are nothing new, but the recent development of large-language-models(LLMs) allows for new approaches. These LLMs integrate world knowledge, leading to a potential spillover effect that can enhance autocompletion systems.
+
+
+
+While the completion of CLI (Command Line Interface) commands is possible, a more intriguing question is whether using the path of command execution and the files contained in the current directory as additional context can improve the accuracy of completion predictions.
+
+
+For  example, it is way more likely to use a git command in a Git repository than in a downloads folder. Furthermore, a command beginning with 'git commit' is more likely to be succeeded by 'git push' than 'git pull'.
+
+
+
+The specific prompt can hugely influence the accuracy of the model's predictions.
+
+For this reason, we try to find a prompt-template that improves the accuracy.
+
+Which consists of telling the model what it which is an autocompletion and an order what we want the model to do which is to predict the CLI command. Additionally, we add the variable context of the current directory and names of the files in the current directory. 
+
+
+
+Next there is the issue of computational resources. With access to a sufficient cloud infrastructure, even high-end LLMs can be deployed. But this only applies if network access is available. Also, to a lesser extent, network speed can be an issue. 
+
+Therefore, we should consider a locale solution. This  again would limit our available 
+
+resources. Therefore, we have to make a trade-off between accuracy and size of the model.
+
+
 \section{Technical Background}
 
 The training of high-end Large-Language-Models (LLM's) can be very expensive \cite{sharir2020cost}. Therefore training one from scratch is not feasible.
@@ -60,7 +87,7 @@ RAM & 16Gb \\
 \caption{GPT-2 Test Specifications }
 \end{table}
 
-the Alpaca test were performed on Hilbert.
+the Alpaca test were performed on HPC.
 
 %Ubuntu 22.04.3 LTS x86_64
 %ThinkPad L590
@@ -183,7 +210,7 @@ by a group of researchers at OpenAI
 
 While gpt based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make the impractibel for consumergrade computers. This can be cirkumvented by the use of the opeaiAPI but this is not free of charge and needs to sent data over the internet which prohibits its use with sensitive data and cannot be used on capsueld systems. 
 
-\subsubsection{LLaMA?} 
+\subsubsection{LLaMA} 
 LLaMA is a LLM first introduced 2023 in "LLaMA: Open and Efficient Foundation Language Models"\cite{touvron2023llama} . It is trained on a diverse set of  100\% openly available text data that is compatible with open sourcing\cite{touvron2023llama} .
 
 
@@ -206,13 +233,14 @@ StackExchange & 2.0\% & 1.03 & 78 GB \\
 \end{tabular}
 \end{table}
 
-The datasets have been preprocessed. The English CommonCrawl  was deduplicated at the line level, and non-English pages and pages not reverenced in Wikipedia have been removed. C4 has been deduplicated and filtered with heuristics like the presence of punctuation and number of words on a webpage. GitHub projects that are distributed under Apache BSD and MIT licenses were used Low quality code and boilerplatecode were removed.
-Wikipedia dumps from the June-August 2022 period, covering the languages: bg, ca, cs, da, de, en, es, fr, hr, hu, it, nl, pl, pt, ro, ru, sl, sr, sv, uk. Hyperlinks comments and formatting boilerplate have been removed.The Gutenberg Project corpus and Books3 corpus have been deduplicated and books with an 90\% overlap have been removed. 
+The datasets have been preprocessed. The English CommonCrawl  was deduplicated at the line level, and non-English pages and pages not reverenced on Wikipedia have been removed. C4 has been deduplicated and filtered with heuristics like the presence of punctuation and number of words on a webpage. GitHub projects that are distributed under Apache BSD and MIT licenses were used Low quality code and boilerplate code were removed.
+Wikipedia dumps from the June-August 2022 period, covering the languages: bg, ca, cs, da, de, en, es, fr, hr, hu, it, nl, pl, pt, ro, ru, sl, sr, sv, uk. Hyperlinks comments and formatting boilerplate have been removed. The Gutenberg Project corpus and Books3 corpus have been deduplicated and books with an 90\% overlap have been removed. 
 ArXiv Latex files have been filtered by removing anything before the first section, as well as the bibliography. Stack Exchange data includes the high quality questions and answers. 
 
 
 
-LLaMAs architektur is based on the transformer architektur but levarages several improvments. Pre-normalization where the input is normalized before each sublayer instead  of just normalizing the output.It uses the Root Mean Square Layer Normalization\cite{zhang2019root}.
+
+LLaMAs architecture is based on the transformer architecture, but leverages several improvements. Pre-normalization, where the input is normalized before each sublayer instead  of just normalizing the output. It uses the Root Mean Square Layer Normalization\cite{zhang2019root}.
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
@@ -230,34 +258,64 @@ The ReLU activation functions have been replaced with SwiGLU activation function
 
 where \(\sigma(z) = \frac{1}{1 + e^{-z}}\) is the sigmoid function.
 
-Last the absolute positional embeddings have been replaced with rotary positional embeddings. It is faster than absolute positional embeddings and dosen't add significant computational overhead. This is benficial for our usecas of generating completions in real-time.The reason for this is that it does not need to learn  a separate embedding for each position in the sequence. Since it does not assume that the positions of tokens in a sequence are independent of each other, it is more capable of learning long-range dependencies between tokens. This also removes the maximum limit of tokens a model can use as input. In other words our prompt can be as long as we like so there is no limit on the length of our prompt template and the information we can give it. But it is importent to note that the limit of quadratic growth of needed computational resources 
-relative to the sequrnce length remains.
+Last, the absolute positional embeddings have been replaced with rotary positional embeddings. It is faster than absolute positional embeddings and doesn't add significant computational overhead. This is beneficial for our use-case of generating completions in real-time. The reason for this is that it does not need to learn  a separate embedding for each position in the sequence. Since it does not assume that the positions of tokens in a sequence are independent of each other, it is more capable of learning long-range dependencies between tokens. This also removes the maximum limit of tokens a model can use as input. In other words, our prompt can be as long as we like, so there is no limit on the length of our prompt template and the information we can give it. But it is important to note that the limit of quadratic growth of needed computational resources 
+relative to the sequence length remains.
 
 
 
-Its tokenizer uses byte-pair-encoding\cite{touvron2023llama}. The authors didn't use their own implementation instead they used the implementation from Sentence-Piece \cite{kudo2018sentencepiece}
+Its tokenizer uses byte-pair-encoding\cite{touvron2023llama}. The authors didn't use their own implementation, instead they used the implementation from Sentence-Piece \cite{kudo2018sentencepiece}
 
 
 
+While this model is acceptable for our task, we reject it in favor of Alpaca, which is a fine-tuned version of LLaMA.
 
 \subsection{Accepted Models}
 
 \subsubsection{GPT-2}
-Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA} . Unlike BERT, it is unidirectional.
+Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA} . Unlike BERT, it is unidirectional. Its architecture is transformer based. Similar to the GPT model with the modification tat Layer normalization was moved to the input of each sub-block and an additional layer normalization was added after the final self-attention block\cite{Radford2019LanguageMA}.
 
 Its Training data consists of Bookcorpus and Webtext thus containing the same training data as BERT. Additionally, it contains code from GitHub and text from Reddit.
-
+The size of its vocabulary is 50,257\cite{Radford2019LanguageMA}.
 
 It utilizes byte pair encoding (BPE) as an encoding method, which is a form of subword tokenization. This process works by repeatedly merging the most common tokens. 
-This way the most common words will be represented as single tokens while less common words will be split into subwords. This way words that are OOV can be split into repetitively till known tokens are reached. This way unknown words can be handled based on their subwords.
+This way the most common words will be represented as single tokens while less common words will be split into subwords. This way words that are OOV can be split into repetitively till known tokens are reached. This way, unknown words can be handled based on their subwords.
 
 
  
 
 
 \subsubsection{Alpaca} 
-Stanfords Alpacka Model based on Metas LLama Model semes to be a good candidate.
-We will use the Alpaca-7B version because it is the smalest. 
+Stanfords Alpacka Model is a fine-tuned version of LLaMA. The underlying architecture is the same LLaMA's ,therefore we refrain from describeing them in detail again. It was fine-tuned with 52K instruction-following demonstrations,which were generated in the style of self-instruct \cite{wang2023selfinstruct} with text-davinci-003. It is important to note that this was only done for LLaMA-7B and LLaMA-13B, not for the larger versions.
+
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Hyperparameter} & \textbf{LLaMA-7B} & \textbf{LLaMA-13B} \\
+\hline
+Batch size & 128 & 128 \\
+Learning rate & $2 \times 10^{-5}$ & $1 \times 10^{-5}$ \\
+Epochs & 3 & 5 \\
+Max length & 512 & 512 \\
+Weight decay & 0 & 0 \\
+\hline
+\end{tabular}
+\caption{Hyperparameters for LLaMA-7B and LLaMA-13B models.\cite{alpaca}}
+\label{tab:hyperparameters}
+\end{table}
+
+
+
+
+The instruction-following demonstrations followed the format: instruction, input and output\cite{wang2023selfinstruct}.The instructions describe the task the model should perform . In the training data all of them are uniqe. The input povides optional context and only appears in roughly 40\% of the data.
+This is similar to our aproach. In our case the instruction is our prompt-template with added context for directory and files and the input is the command that is to be completed. The output however is to be generated by the model.
+
+
+We are interested in an attempt to run it on alocale machine therefore, 
+we will use the Alpaca-7B version because it is the smaler. 
 
 
 
@@ -327,25 +385,31 @@ But this limits its usage to system specific commands. To give an example of thi
 A number of prompt combinations have been tested and for simplicity we decided to choose the variation that provided the best outcome 
 
 
-the "You are an autocomplete function. " and "This is an autocomplete function. " tend to provide significantly worse results than other premises. There are less likely to produce a terminal command, but a text about said command.
 
-"This is a linux terminal command. " provides better output but tends to append an explanation of the command. "This is a linux terminal. " tends to provide the best solutions. 
+The "You are an autocomplete function. " and "This is an autocomplete function. " tend to provide significantly worse results than other premises. There are less likely to produce a terminal command, but a text about said command.
+
+
+"This is a Linux terminal command. " provides better output but tends to append an explanation of the command. "This is a Linux terminal. " tends to provide the best solutions. 
+
 
 
 
 Path and file in the current directory are not specified in the final prompt because these are defined by the context.
 
 
+
 The file contexts show no significant differences, so "There are the following files in the current  directory: "is chosen to pick one for simplicity.
 
 
 
-So the final prompt is: "This is a linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>".
+
+So the final prompt is: "This is a Linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following Linux terminal command and provide no further explanation for the command: <command>".
+
 
 
 Now that we have the prompt template we can tend to the 
 
-\section{tests}
+\section{Tests}
 List of commands used
 
 We used the following commands to autocomplete:
@@ -356,20 +420,21 @@ We used the following commands to autocomplete:
 The reasons we chose these are to test four scenarios. First, the relative context independent apt commands. Here we try to take a look how successful the autocompletion can be on a command that is not influenced by its context to have a comparison with commands that are more influenced by their context.
 
 
+
 Second, the  "ls" command. The goal here is to see what happens when the models have to handle very short commands or, in other words, have few tokens to work with.
+
 
 
 Third, python based commands. The python command is supposed to run python code, this can be in an interactive shell or a python script. While the interactive shell isn't that reliant on context, the running of a python script is. A prediction in this case would only be viable if the predicted file is a python file present in the current directory, not accounting for possible parameters given to the script.
 
 
 
-Last git based commands. The git commands are heavily influenced depending on where 
+Last git based commands. The git commands are heavily influenced depending on where you run them and what files are in the current directory. This however varies from command to command.
 
-they are run
 
 tabelle fur die tests mit context
 \pagebreak
-\subsection{tests with gpt2}\raggedbottom
+\subsection{Tests with GPT-2}\raggedbottom
 
 The unfinetuned gpt2 was chosen for its small size of round 550mb. Which makes it runnable on a low resource machine without any further processing. 
 
@@ -391,7 +456,7 @@ I tested two scenarios with the gpt2 model first the apt based commands that wor
 
 The git commands had way worse results. While trying to use the git  init command given the "git ini" was not able to predict the "t" of "init" correctly, and the "git c" wasn't able to predict anything near "git commit" not even  the "git comm" could predict "commit" most of the time even then not without a lot of unwanted text appended. The prepending of "Autocomplete the following terminal command:" seems to produce less unwanted text but still no usable output. 
 
-\subsection{test with alpaca-7b}
+\subsection{Tests with Alpaca-7b}
 While alpaca gives far better results, there are limits.
 
 
@@ -421,18 +486,39 @@ Therefore fine-tuning the model is the next logical step.
 
 
 
-
-It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although since this could be a high amount of tokens, the computational power needed therefore would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
-
-
-A different model could also be tested. While this was written,  LLama2  was released by Meta. It is a successor of LLama which alpaca is based on. It was not used solely for the reason that it came out late in the writing of this thesis.
-
-fientuning the tested models
+It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although, since this could be a high amount of tokens, the computational power needed therefore would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
 
 
-more Scenarios to test more variations 
-other alpaca versions and 
 
-Stanfords Alpaca model was created on the 7B version of LLaMA. LLaMA has bigger versions.  Since the code for the traings process and the used trainings data are publicate by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. While the process of fine-tuning the larger models is more expensive than the finetuning of the 7B version 
+\subsection{Other Alpaca Versions}
+
+Stanford's Alpaca model was created with the 7B version of LLaMA as a base, But LLaMA has bigger versions.  Since the code for the training process and the used training data are publicized by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. The process of fine-tuning the larger models is more expensive than the fine-tuning of the 7B version. The same or similar tests could be performed with such models. It is however to note that this could not be performed on most consumer devices, but a cloud application might be feasible.
+
+
+\subsection{LLaMA2}
+
+While this was written, LLaMA2 was released.\cite{touvron2023llama2}
+LLaMA2 itself could be used as a model. But since the architecture of LLaMA2 remains largely unchanged from its predecessor, LLaMA. It could also be trained like Alpaca. It could be interesting to see if this new model produces a similar outcome or not.
+
+
+\subsection{Finetuning}
+
+In our tests, we concluded that the models used did not produce satisfying results. For this reason, we should consider fine-tuning them. If real-world data is not available. Training data can be generated by AI's such as Chat-GPT. 
+
+
+\subsection{Extension of Test cases}
+
+
+\subsection{Out-Of-Vocabulary Words}
+
+A general problem for all models is the handling of tokens that are unknown to the tokenizer. Although some models handle this problem better than others, all models tend to handle these tokens worse than their in-vocabulary counterparts. Therefore, it could be interesting to research how  presence and absence of tokens in the tokenizer influence the predictions of our models.
+
+
+\subsection{LoRa}
+
+
+\subsection{context extensions to subdirectories}
+
+While our current approach is limited to the files in the current directory, we could extend this to files in the subdirectories of the current directory. This could give the model a better idea of its surroundings and therefore provide more information for the model's predictions. However, depending on the model that is used, the size of the context might be an issue.
 
 
