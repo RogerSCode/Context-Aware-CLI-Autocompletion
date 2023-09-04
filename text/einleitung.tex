@@ -7,67 +7,67 @@ Stochastic Autocompletion systems for the terminal are nothing new, but the rece
 While the completion of CLI (Command Line Interface) commands is possible, a more intriguing question is whether using the path of command execution and the files contained in the current directory as additional context can improve the accuracy of completion predictions.
 
 
-For  example, it is way more likely to use a git command in a Git repository than in a downloads folder. Furthermore, a command beginning with 'git commit' is more likely to be succeeded by 'git push' than 'git pull'.
+For example, it is far more likely to use a git command in a Git repository than in a downloads folder. Furthermore, a command beginning with 'git commit' is more likely to be succeeded by 'git push' than 'git pull'.
 
 
 
 The specific prompt can hugely influence the accuracy of the model's predictions.
-
 For this reason, we try to find a prompt-template that improves the accuracy.
-
-Which consists of telling the model what it which is an autocompletion and an order what we want the model to do which is to predict the CLI command. Additionally, we add the variable context of the current directory and names of the files in the current directory. 
-
+Which consists of telling the model what it is, which is an autocompletion and an order what we want the model to do, which is to predict the CLI command. Additionally, we add the variable context of the current directory and names of the files in the current directory. 
 
 
-Next there is the issue of computational resources. With access to a sufficient cloud infrastructure, even high-end LLMs can be deployed. But this only applies if network access is available. Also, to a lesser extent, network speed can be an issue. 
 
-Therefore, we should consider a locale solution. This  again would limit our available 
+Next, there is the issue of computational resources. With access to a sufficient cloud infrastructure, even high-end LLMs can be deployed. But this only applies if network access is available. Also, to a lesser extent, network speed can be an issue. 
 
-resources. Therefore, we have to make a trade-off between accuracy and size of the model.
-
+Therefore, we should consider a local solution. This again would limit our available resources. Therefore, we have to make a trade-off between accuracy and size of the model.
 
 \section{Technical Background}
 
-The training of high-end Large-Language-Models (LLM's) can be very expensive \cite{sharir2020cost}. Therefore training one from scratch is not feasible.
-The solution to this issue is to resort to pre-trainded LLM's. 
+The training of high-end Large-Language-Models (LLMs) can be very expensive \cite{sharir2020cost}. Therefore, training one from scratch is not feasible.
+The solution to this issue is to resort to pre-trainded LLMs. 
 
 
 \subsection{Transformer Architecture}
-The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017, which has since become a foundational building block for many state-of-the-art models. They were designed to handle sequential data, making them particularly effective for NLP tasks. Unlike earlier architectures like recurrent neural networks (RNNs) or long short-term memory (LSTM) networks, transformers can process data in parallel rather than sequentially and can outperform those.
-Its novelty idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token, in other words, focusing on their relevance. This allows a model to learn long-range dependencies between words in a sentence. The transformer model consists of an encoder and a decoder. The Encoder converts the input into a set of vectors representing the semantic information. Positional encoding vectors are added to the embedding vectors to give the model the ability to deduce the distance between two tokens so that the model has information about the position of each token. This is needed because transformers don't process data sequentially. 
-Decoding is the process of generating output from the encoded input. In the transformer architecture, this process is autoregressive, which means that the model generates one token at a time. Each new token is  used together with the previous tokens to generate 
-another token. This is repeated till the end of the sequence is reached.
+The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017, which has since become a foundational building block for many state-of-the-art models. They are designed to handle sequential data, making them particularly effective for NLP tasks. Unlike earlier architectures like recurrent neural networks (RNNs) or long short-term memory (LSTM) networks, transformers can process data in parallel rather than sequentially and can outperform those.
+Its novel idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token, in other words, focusing on its relevance. This allows a model to learn long-range dependencies between words in a sentence. The transformer model consists of an encoder and a decoder. The encoder converts the input into a set of vectors representing the semantic information. Positional encoding vectors are added to the embedding vectors to give the model the ability to deduce the distance between two tokens so that the model has information about the position of each token. This is needed because transformers don't process data sequentially. 
+Decoding is the process of generating output from the encoded input. In the transformer architecture, this process is autoregressive, which means that the model generates one token at a time. Each new token is used together with the previous tokens to generate 
+another token. This is repeated until the end of the sequence is reached.
 The order of the tokens is encoded with the addition of positional encodings similar to the encoder.
 
 Since then, it has been used to develop LLMs that set a new standard for NLP tasks.
 For this reason, we limit our choice of models to transformer-based models.
 
 
-
-
-
-
-This however is not the only thing we have to consider. Since our goal is to create an autocompletion system, we need models that excel in autocompletion tasks.
-
+This, however, is not the only thing we have to consider. Since our goal is to create an autocompletion system, we need models that excel at autocompletion tasks.
 
 
 \subsection{Computational Resources}
 
 
-There are two cases for application, on a locale machine and in the cloud.
+There are two cases for application, on a local machine and in the cloud.
 
 
 
-We have to consider the model's memory footprint. While usage on a cloud system has no practical limits on memory size, locale systems are a different thing.
+We have to consider the model's memory footprint. While usage on a cloud system has no practical limits on memory size. But local systems present different challenges.
 Here we want a sufficiently small model.
 
-In terms of inference speed, we aim for real-time or near-real-time responses. For our       use case, the worst acceptable response time would be the variable time the user would need to just type the command. The additional response time in case of cloud based systems is not considered in this thesis.
+In terms of inference speed, we aim for real-time or at least near-real-time responses. For our use case, the worst acceptable response time would be the variable time the user would need to just type the command. The additional response time in case of cloud-based systems is not considered in this thesis.
 
-The final limitation given the task of autocompletion is that we need a model with subword based tokenization or similar. A word based model would not suffice because these models are not able to autocomplete words as well.
+
+\subsection{Tokenization}
+
+Tokenization is the process of splitting a sequence of text into subsequences. The granularity of those subsequences can change from entire phrases to single characters.
+For the task of autocompletion, we need a model with at least subword-based tokenization. A word-based model would not suffice because these models are not able to autocomplete words as well. 
+
+
+
+
 
 
 \section{Setup}\raggedbottom
-For reproducibility we have to mention what kind of system and what kind of software was used.
+In this chapter we list the devices, languages and librarys used for our testsetup.
+The laptop described in Table 1 was used simply because it was available. It was used for local tests while larger models were done on the HILBERT, the HPC supercomputer of the HHU. The enviroment had 40GB of RAM available.
+
 
 \begin{table}[h]
 \centering
@@ -84,7 +84,7 @@ CPU & Intel i7-8565U (8) @ 4.600GHz \\
 RAM & 16Gb \\
 \hline
 \end{tabular}
-\caption{GPT-2 Test Specifications }
+\caption{local machine specs }
 \end{table}
 
 the Alpaca test were performed on HPC.
@@ -106,7 +106,7 @@ tokenizers-0.13.3-py38h7d131c9_0.conda
   
 \end{itemize}
 
-pip
+Pip
 \begin{itemize}
 \item \begin{verbatim}
 numpy             1.25.0
@@ -123,49 +123,56 @@ python version  3.11.3
 
 
 
-\section{The Programm}
+
+
+
+
+\section{The Program}
+
 For a practical application, we need a program that actually completes the commands.
-Ideally, the autocompletion integrates seamlessly with the normal usage of the command line interface. For the sake of this thesis, we have to limit our program to the base functionality. Which means that advanced functions like the coloring of the prompt are not implemented. Our approach here is to build a wrapper around the terminal interface taking the user input, handing it to the terminal interpreter and adding a completion if ordered to do so. The output of the command is displayed as usual.
+
+Ideally, the autocompletion integrates seamlessly with the normal usage of the command-line interface. For the sake of this thesis, we have to limit our program to its base functionality. Which means that advanced functions like the coloring of the prompt are not implemented. Our approach here is to build a wrapper around the terminal interface, taking the user input, handing it to the terminal interpreter, and adding a completion if instructed to do so. The output of the command is displayed as usual.
 
 
-We chose to implement it on Linux for a bash shell. The reason for this is that aside from a pick one solution is that Linux among the major operating systems has the biggest focus on CLI usage and is even usable on Windows through the use of WSL.
+
+We chose to implement it on Linux as a bash shell. The reason for this is that, aside from a pick-one solution, Linux among the major operating systems has the biggest focus on CLI usage and is even usable on Windows through the use of WSL.
+
  
 
-Shell script is chosen as the  language because it is able to run on most UNIX-like systems.
+
+Shell script is chosen as the language because it is able to run on most UNIX-like systems.
 
 
-Our script upon running presents us with a terminal prompt containing the current directory, which is also given to the autocompletion if along with the typed prompt by pressing the TAB key. The complete command can be executed like in a normal terminal by pressing the Enter key. 
 
-Another function is that the program records the executed command in a history database, this is separate from the normal history. The idea behind it is that these commands along with the path they were executed in can be used to fine-tune the used model if so desired.
+Our script, upon running, presents us with a terminal prompt containing the current directory, which is also given to the autocompletion along with the typed prompt by pressing the TAB key. The complete command can be executed like in a normal terminal by pressing the Enter key. 
 
 
-The autocompletion itself happens in a separate python file. The reason for this is that python offers better support for machine learning tasks compared to bash. This also offers the opportunity to use code from the model test with slight modifications.
+Another function is that the program records the executed command in a history database, which is separate from the normal history. The idea behind it is that these commands, along with the path they were executed on, can be used to fine-tune the model in use if so desired.
 
-In the python file, the specific model is chosen in a config file, which can be changed by the user.
-The prompt template is modified by the directory and filenames is given to the model
-Then the model uses it as context to predict  a completion for the command.
-The predicted command is then returned.
+
+
+The autocompletion itself happens in a separate Python file. The reason for this is that Python offers better support for machine learning tasks compared to Bash. This also offers the opportunity to use code from the model test with slight modifications.
+
+
+In the Python file, the specific model is chosen in a config file, which can be changed by the user.
+
+The prompt template is modified by the directory, and filenames are given to the model.
+
+Then the model uses it as context to predict  a completion of the command.
+After that the predicted command is then returned.
+
+
 
 
 
 \section{The Model}\raggedbottom
-The Training of an LLM from scratch would be too  cost/time intensive for this thesis, so the use of a pretrained LLM is far more practical.
 
 
-Now  we come to the question: Which model to choose and why? 
+Since we want to complete CLI commands, we need a model that performs well on autocompletion tasks. So we prefer one whose architecture benefits such a task. 
 
-Since we want to complete CLI commands, we need a model that performs well on autocompletion tasks. So we prefer one whose architecture benefits such a task.
+From a financial perspective, models that are not free to use,are not apropiate which limits the use of non-free APIs. 
 
-
-From a financial perspective, it should be free to use, which limits the use of non-free APIs.
-
-
-Since we want to use our autocompletion system on a 
-<fullfill>
-
-<deprecated>
-We choose the specific models according to the categories of size speed and accuracy of output. While these factors can be influenced by fine-tuning and methods like Lora. We choose the strategie to pick the models with the best baseline.
-
+For local usage we want a sufficiently small model. This however does not apply for cloud usage. 
 
 For practical reasons, we limit ourselves to models that were publicized at the beginning of writing this thesis. So models like LLaMA2 which was publicized during the writing process of this thesis were not considered.
 
@@ -175,26 +182,35 @@ For practical reasons, we limit ourselves to models that were publicized at the 
 
 
 \subsubsection{BERT}
+
 Bidirectional Encoder Representations from Transformers or short BERT was introduced  2018  in BERT: Pre-training of Deep Bidirectional Transformers for
+
 Language Understanding \cite{devlin2019bert}. It was the first major Bidirectional model, which means it can use the context of right sided input in addition to left sided input. Unlike most previous models, which could only use left sided input.
 
+
  
+
  BERT's training data consists of two sources, the Bookscorpus and the English Wikipedia. The Bookscorpus is a dataset of textbooks containing approximately 800 million words, providing roughly one third of BERT's training data. The English Wikipedia dataset as its name implies contains texts from English Wikipedia articles limited to only the text passages. The lists, tables and headers have been removed.
+
 Its size consists of approximately 2500 million word which makes it the majority of BERT's training data. \cite{devlin2019bert}
 
 
+
  Given the nature of an autocompletion task, this ability is not helpful. Since the model has to predict the entire right side of its input, there is no right side input it could use. So it would behave like a unidirectional model, losing its biggest architectural benefit.
+
  
+
 However, it is to note that BERT's bidirectional encoding during training and the so encoded knowledge can benefit the predictions  for situations where only one directional encoding is possible.
+
 
 The next point is that BERT is only able to use 512 tokens as context, which limits the size of its prompt length. While the template itself has a fixed number of tokens, the Path is of variable length. As well as the number of files.
 
 
 
-The last issue with this model is the way its encoder handles out-of-vocabulary(OOV) tokens. Since Bert's encoder works with a fixed vocabulary it will not be able to process words that are not in its vocabulary. This poses a huge issue for named entities. This would include the names of programs, with whom most terminal commands start. As well as the names of files and directories which are given as context to the model. 
+The last issue with this model is the way its encoder handles out-of-vocabulary(OOV) tokens. Since Bert's encoder works with a fixed vocabulary, it will not be able to process words that are not in its vocabulary. This poses a huge issue for named entities. This would include the names of programs, with whom most terminal commands start. As well as the names of files and directories, which are given as context to the model. 
+
 
 In our specific use case, this would mean that BERT could not use the given context and would be unable to complete some commands reasonably. 
-
 
 
 These arguments lead to the conclusion that BERT is not suitable for this task. Therefore, we reject its use.
@@ -205,15 +221,16 @@ These arguments lead to the conclusion that BERT is not suitable for this task. 
 
 \subsubsection{GPT-3/GPT-4}
 
-GPT-3 was first published in "Language Models are Few-Shot Learners" on May 28, 2020
-by a group of researchers at OpenAI
 
-While gpt based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make the impractibel for consumergrade computers. This can be cirkumvented by the use of the opeaiAPI but this is not free of charge and needs to sent data over the internet which prohibits its use with sensitive data and cannot be used on capsueld systems. 
+GPT-3 was first published in "Language Models are Few-Shot Learners" on May 28, 2020 by a group of researchers at OpenAI
+
+
+While GPT based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make them impractical for consumer grade computers. This can be circumvented by the use of the OpenAI API, but this is not free of charge and needs to sent data over the internet, which prohibits its use with sensitive data and cannot be used on capsuled systems. 
+
 
 \subsubsection{LLaMA} 
-LLaMA is a LLM first introduced 2023 in "LLaMA: Open and Efficient Foundation Language Models"\cite{touvron2023llama} . It is trained on a diverse set of  100\% openly available text data that is compatible with open sourcing\cite{touvron2023llama} .
 
-
+LLaMA is a LLM first introduced 2023 in "LLaMA: Open and Efficient Foundation Language Models"\cite{touvron2023llama}. It is trained on a diverse set of  100\% openly available text data that is compatible with open sourcing\cite{touvron2023llama}.
 
 \begin{table}[htbp]
 \centering
@@ -272,20 +289,28 @@ While this model is acceptable for our task, we reject it in favor of Alpaca, wh
 \subsection{Accepted Models}
 
 \subsubsection{GPT-2}
-Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA} . Unlike BERT, it is unidirectional. Its architecture is transformer based. Similar to the GPT model with the modification tat Layer normalization was moved to the input of each sub-block and an additional layer normalization was added after the final self-attention block\cite{Radford2019LanguageMA}.
+
+Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA}. Unlike BERT, it is unidirectional. Its architecture is transformer based. Similar to the GPT model with the modification, the Layer normalization was moved to the input of each sub-block and an additional layer normalization was added after the final self-attention block\cite{Radford2019LanguageMA}.
+
 
 Its Training data consists of Bookcorpus and Webtext thus containing the same training data as BERT. Additionally, it contains code from GitHub and text from Reddit.
+
 The size of its vocabulary is 50,257\cite{Radford2019LanguageMA}.
 
+
 It utilizes byte pair encoding (BPE) as an encoding method, which is a form of subword tokenization. This process works by repeatedly merging the most common tokens. 
+
 This way the most common words will be represented as single tokens while less common words will be split into subwords. This way words that are OOV can be split into repetitively till known tokens are reached. This way, unknown words can be handled based on their subwords.
+
 
 
  
 
 
+
 \subsubsection{Alpaca} 
-Stanfords Alpacka Model is a fine-tuned version of LLaMA. The underlying architecture is the same LLaMA's ,therefore we refrain from describeing them in detail again. It was fine-tuned with 52K instruction-following demonstrations,which were generated in the style of self-instruct \cite{wang2023selfinstruct} with text-davinci-003. It is important to note that this was only done for LLaMA-7B and LLaMA-13B, not for the larger versions.
+
+Stanford's Alpaca Model is a fine-tuned version of LLaMA. The underlying architecture is the same LLaMA's, therefore, we refrain from describing them in detail again. It was fine-tuned with 52K instruction-following demonstrations, which were generated in the style of self-instruct \cite{wang2023selfinstruct} with text-davinci-003. It is important to note that this was only done for LLaMA-7B and LLaMA-13B, not for the larger versions.
 
 
 
@@ -310,12 +335,12 @@ Weight decay & 0 & 0 \\
 
 
 
-The instruction-following demonstrations followed the format: instruction, input and output\cite{wang2023selfinstruct}.The instructions describe the task the model should perform . In the training data all of them are uniqe. The input povides optional context and only appears in roughly 40\% of the data.
-This is similar to our aproach. In our case the instruction is our prompt-template with added context for directory and files and the input is the command that is to be completed. The output however is to be generated by the model.
+The instruction-following demonstrations followed the format: instruction, input and output\cite{wang2023selfinstruct}. The instructions describe the task the model should perform. In the training data, all of them are unique. The input provides optional context and only appears in roughly 40\% of the data.
+This is similar to our approach. In our case the instruction is our prompt-template with added context for directory and files and the input is the command that is to be completed. The output, however, is to be generated by the model.
 
 
-We are interested in an attempt to run it on alocale machine therefore, 
-we will use the Alpaca-7B version because it is the smaler. 
+We are interested in an attempt to run it on a local machine, therefore, 
+we will use the Alpaca-7B version because it is the smaller. 
 
 
 
@@ -334,13 +359,19 @@ we will use the Alpaca-7B version because it is the smaler.
 \section{Prompt Template}
 
 
+
 The specific input to guide the behavior of a machine learning model is called a "prompt". The model uses it as context. The way the prompt is worded can heavily influence the behavior of the model. Therefore, we need a prompt that accurately describes the tasks at hand. Which is to complete CLI commands. Therefore, it makes sense to simply tell the model what it is and what we want the model to do. 
+
 
 
 
 Providing a Linux system as context has the advantage to give the model context which completion would be plausible. 
 
+
 But this limits its usage to system specific commands. To give an example of this, the "ls" command would closer relate to  a Linux terminal as the Windows/DOS equivalent "dir". This can easily be adjusted by replacing the system's name in the prompt.
+
+
+Another thing to note is that all sentences in the prompt-template, and all variations of it, are using the English language. The reason for this is that most LLMs including the ones chosen in the models section are trained with mostly English training data. Therefore, our models will likely have an easier time processing the English language compared to other languages. 
 
 
 
@@ -407,7 +438,7 @@ So the final prompt is: "This is a Linux terminal. There are the following files
 
 
 
-Now that we have the prompt template we can tend to the 
+Now that we have the prompt template, we can tend to the tests.
 
 \section{Tests}
 List of commands used
@@ -432,93 +463,216 @@ Third, python based commands. The python command is supposed to run python code,
 Last git based commands. The git commands are heavily influenced depending on where you run them and what files are in the current directory. This however varies from command to command.
 
 
-tabelle fur die tests mit context
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|}
+\hline
+\textbf{Files} \\
+\hline
+"tests.py, data.txt ,webserver.py " \\
+"webserver.py, config.txt " \\
+".git, .gitignore, README.md, webserver.py, config.txt, tests.py, data.txt " \\
+"javasdk.deb"\\
+"geany.deb"\\
+\hline
+\end{tabular}
+\caption{List of tested files}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|}
+\hline
+\textbf{Paths} \\
+\hline
+"/home " \\
+"/home/user/project " \\
+\hline
+\end{tabular}
+\caption{List of tested paths}
+\end{table}
+
+For context data we had a simple a mock git repository to see how the predictions of the git based commnads are influenced. The ".deb" files are for the sam reason for the apt based commands.
+
+
+
+
 \pagebreak
 \subsection{Tests with GPT-2}\raggedbottom
 
-The unfinetuned gpt2 was chosen for its small size of round 550mb. Which makes it runnable on a low resource machine without any further processing. 
-
-We used it with the Huggingface API since it is easy to use and the most popular API for such tasks. The "This is a linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>" prompt as decided on in the previous section was used.
-
-
-The model produced no valid commands while some of the git  completions resembled some git commands, none of them were valid.
-
-While the speed was sufficient, its failure to produce valid commands suggests that
-
-it is probably better to use a different model. 
+All tests with the GPT-2 model were conducted on the laptop mentioned in the setup section.
+Our first test with the model had just the incomplete command as input without any context added. The completions generated with the model were just nonsensical text.
 
 
 
+\subsubsection{Tests with the Prompt-Template}
+
+ The apt based commands  worked insofar that it predicted the most commonly used apt commands update and install. also tey contained a lot of followup text relating to the command, or a repetition of text that resembles apt based commands.
 
 
-I tested two scenarios with the gpt2 model first the apt based commands that worked insofar that it predicted the most commonly used apt commands update and install also with a lot of followup text, however most apt based commands are independent from their context insofar that they don't rely on the path they are executed in. It also has to be noted that the model produced more text appended to the command 
+The ls command gets completed with random parameters 60\% of the time.
 
 
-The git commands had way worse results. While trying to use the git  init command given the "git ini" was not able to predict the "t" of "init" correctly, and the "git c" wasn't able to predict anything near "git commit" not even  the "git comm" could predict "commit" most of the time even then not without a lot of unwanted text appended. The prepending of "Autocomplete the following terminal command:" seems to produce less unwanted text but still no usable output. 
+The python based commands are completed into a nonsensical text about python. However, the command never gets completed into the word "python" even if the word appears in the appended text. A common pattern is that the python command gets repeated, for example "pyth" gets completed into "pythpyth". 
+
+
+The git commands had way worse results. While trying to use the "git init" command given the "git ini" was not able to predict the "t" of "init" correctly, and the "git c" wasn't able to predict anything near "git commit" not even  the "git comm" could predict "commit". Most of the time, a lot of unwanted text was appended. 
+
+
+
+\subsubsection{Tests with Context}
+
+The apt based commands had similar completions compared to the predictions without the prompt-template, it is however to note that sometime the path or the file names were mentioned.
+
+
+The ls command sometimes gets the directory as an argument which is valid, but sometimes a file in the same manner which is not.
+
+
+The biggest difference with the python based commands here was that the context information was referenced in the completions.
+
+
+The completions of the git based commands showed references to the given context, but no improvements, save some hallucinated git repository.
+
+
+
+
+
+
+
+
 
 \subsection{Tests with Alpaca-7b}
-While alpaca gives far better results, there are limits.
 
 
-A test without any prefix showed only nonsensical results.
+
+All tests with the Alpaca model were conducted on the HPC.
+
+
+The first test with the model used just the incomplete command as input, without any additional context.
+
+
 
 The apt commands often get completed into a text about apt based commands. While the ls command doesn't get interpreted as a command, presumably because it is short.
 
-The python based commands mostly get completed into nonsensical text. Sometimes with python commands with more letters of the word "python" gets interpreted as a type of snake, which is not surprising considering the training data probably contains more text about snakes than the programming language. The git based commands again get completed into nonsensical text.
-
-
-The added prefix  "This is a linux terminal. There are the following files in the current  directory:,Path:, Autocomplete the following linux terminal command and provide no further explanation for the command: <command>" shows an improvement, with apt and ls commands, with the notable outlier "py" who gets completed to the misspelled "pyhton" following a text about python.
-
-The git based commands get completed in to nonfunctional git commands and text about these commands.
-
-
-If we add a path and files in the current directory as context, we still cannot produce valid commands.
-
-Noteworthy here is that sometimes the python commands dont get any completion at all.
-
-
-This suggests that the base model is not able to do it in a sufficient way. Which makes methods like Lora not viable 
- to counter its slow speed and big size. Since it would lower its accuracy. 
-
-Therefore fine-tuning the model is the next logical step.
-
-\section{possible extensions}
 
 
 
-It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although, since this could be a high amount of tokens, the computational power needed therefore would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
+The python based commands mostly get completed into nonsensical text. Sometimes with python, commands with more letters of the word "python" gets interpreted as a type of snake, which is not surprising considering the training data probably contains more text about snakes than the programming language. The git based commands again get completed into nonsensical text.
+
+
+
+
+\subsubsection{Tests with the Prompt-Template}
+
+
+
+The added prefix  "This is a Linux terminal. There are the following files in the current  directory:,Path:, Autocomplete the following Linux terminal command and provide no further explanation for the command: <command>" shows an improvement, with apt and ls commands,
+
+
+ 
+
+If the command "py" gets completed to the intended completion "python" it always gets completed with the spelling error "pyhton" switching "h" and "t". The command "pyt" gets completed into "pytorch" 80\% of the time, but the other 20\% it gets completed into other misspelled versions of "python".
+
+
+The git based commands get completed in to nonfunctional git commands and text about these commands. One exception is "git" which 2/3 of the time gets completed into a valid command, except that the git repositories are not existing. Otherwise, the command was a valid command  with added text. 
+
+
+
+
+\subsubsection{Tests with Context}
+
+
+
+If we add a path and files in the current directory as context, we still cannot produce valid commands most of the time. 
+
+
+
+Noteworthy here is that 25\% of the time the python commands don't get any completion at all.
+
+
+
+A similar issue sometimes happens with the ls command, but this is still a valid command. 
+
+The ls command gets completed into a valid command 30\% of the time. The most common invalid prediction was "ls." which was occurring round 30\% of the time.
+
+
+Also, the ls command sometimes gets completed with the Path. For example, "ls" with Path:"/home/user/project" gets completed into "ls -l /home/user/project" 
+
+
+
+
+With added context, the git based commands 1/5 of the time get completed into a text referencing the mentioned files and directory. Also, two things are noteworthy. The first is that one completion occurred, that clones an existing repository. The other is the only valid occurrence of a completion of "git commit" which was completed from "git" and not from "git co" nor from "git comm".
+
+\section{Conclusion}
+
+The use of a prompt template showed a clear improvement compared to a prompt containing just the uncompleted command insofar that the text produced by both models was always to some extent related to a Linux terminal command even tough mostly an explanation of a command, even tough the prompt -template was designed to avoid this.
+
+
+The added information of path and filenames added little to no benefit to the completions.
+Often, the models hallucinated mixtures of both values. In our applied measures, we could not get either model to stop hallucinating things.
+
+ 
+
+In terms of inference neither model had the speed to complete the commands in real-time while  GPT-2 with an average time of 4 seconds was closer than Alpacawith an inference time ranging from 9 to 128 seconds. The more accurate Alpaca model is too large to be deployed on a low powered machine, but can be deployed on a cloud server. Alpacas inference time was way too slow for practical use. 
+
+
+The base models are unfit for an autocompletion function, so further measures like fine´tuning and LoRa are reasonable.
+
+
+\section{Possible Extensions}
+It could be interesting to investigate if and how previous commands influence the outcome. Commands from the history could be added to the prompt. Although, since this could be a high amount of tokens, the computational power needed, would be higher and the token limit of the model could be exceeded. Therefore, the commands need to be filtered. 
+
 
 
 
 \subsection{Other Alpaca Versions}
 
-Stanford's Alpaca model was created with the 7B version of LLaMA as a base, But LLaMA has bigger versions.  Since the code for the training process and the used training data are publicized by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. The process of fine-tuning the larger models is more expensive than the fine-tuning of the 7B version. The same or similar tests could be performed with such models. It is however to note that this could not be performed on most consumer devices, but a cloud application might be feasible.
+
+Stanford's Alpaca model was created with the 7B version of LLaMA as a base, but LLaMA has bigger versions.  Since the code for the training process and the used training data are publicized by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. The process of fine-tuning the larger models is more expensive than the fine-tuning of the 7B version. The same or similar tests to those already conducted, could be performed with such models. It is noteworthy that, this could not be performed on most consumer devices, but a cloud application might be feasible.
+
 
 
 \subsection{LLaMA2}
 
+
 While this was written, LLaMA2 was released.\cite{touvron2023llama2}
+
 LLaMA2 itself could be used as a model. But since the architecture of LLaMA2 remains largely unchanged from its predecessor, LLaMA. It could also be trained like Alpaca. It could be interesting to see if this new model produces a similar outcome or not.
+
 
 
 \subsection{Finetuning}
 
-In our tests, we concluded that the models used did not produce satisfying results. For this reason, we should consider fine-tuning them. If real-world data is not available. Training data can be generated by AI's such as Chat-GPT. 
+
+In our tests, we concluded that the models used did not produce satisfying results. For this reason, we should consider fine-tuning them. If real-world data is not available. Training data can be generated by AI's such as Chat-GPT. But to mitigate the bias of the model that produces the training's data. Several models should be used to produce training data. However, this doesn't help if the models have shared biases.
 
 
-\subsection{Extension of Test cases}
+%\subsection{Extension of Test Cases}
+
 
 
 \subsection{Out-Of-Vocabulary Words}
 
+
 A general problem for all models is the handling of tokens that are unknown to the tokenizer. Although some models handle this problem better than others, all models tend to handle these tokens worse than their in-vocabulary counterparts. Therefore, it could be interesting to research how  presence and absence of tokens in the tokenizer influence the predictions of our models.
+
 
 
 \subsection{LoRa}
 
+The larger the model, the larger the computational resources needed to train and deploy them.
 
-\subsection{context extensions to subdirectories}
+In the case of LLMs this can be very costly as seen in with our tests with Alpaca. 
 
-While our current approach is limited to the files in the current directory, we could extend this to files in the subdirectories of the current directory. This could give the model a better idea of its surroundings and therefore provide more information for the model's predictions. However, depending on the model that is used, the size of the context might be an issue.
+Here,  Low-rank adaptation (LoRA) can help us. The idea is to decompose the model's weight-matrix into a lower-dimensional representation, that captures most of the information of the original model. This would reduce the number of parameters greatly. Ideally this would allow us to run larger models like Alpaca on local machines.
+
+
+\subsection{Context Extension to Subdirectories}
+
+
+While our current approach is limited to the files in the current directory, we could extend this to files in the subdirectories of the current directory. This could give the model a better idea of its surroundings and therefore, provide more information for the model's predictions. However, depending on the model that is used, the size of the context might be an issue.
+
 
 

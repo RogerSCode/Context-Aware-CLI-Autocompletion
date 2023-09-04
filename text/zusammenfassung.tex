@@ -1,31 +1,15 @@
 %%% Die folgende Zeile nicht ändern!
 \section*{\ifthenelse{\equal{\sprache}{englisch}}{Abstract}}
 %%% Zusammenfassung:
+We try to create an LLM based autocompletion system that uses context to create more accurate predictions. Our approach is to add context-information to the prompt. Therefore, we create a prompt-template that tells the model that it is an autocompletion function for a Linux terminal. Several variations of this are tested, and the best one is chosen. The prompt-template is populated during use with the path, the command is executed in and the names of the files in the current directory.
 
 
 
-Stochastic Autocompletion systems for the terminal are nothing new, but the recent development of large-language-models(LLMs) allows for new approaches. These LLMs integrate world knowledge, leading to a potential spillover effect that can enhance autocompletion systems.
+In search of a model to use, we have the criteria that it has to be transformer based and its tokenizer has to be of at least subword granularity. We also consider the tradeoff between accuracy and resource demand. We reject BERT for its architecture. GPT-3 and GPT-4 are considered but rejected because they are not free to use.
+So we decide on their predecessor, GPT-2 and the LLaMA based Alpaca that is fine-tuned to behave like GPT-3
 
 
 
-While the completion of CLI (Command Line Interface) commands is possible, a more intriguing question is whether using the path of command execution and the files contained in the current directory as additional context can improve the accuracy of completion predictions.
+Our tests show that with just the command, the models do not generate useful results. The usage of our prompt-template show an improvement. But the directory and files have little to no benefit, even tough they clearly influence the predictions. Which leads us to the conclusion that the base models are not good enough for this task.
 
-
-For  example, it is way more likely to use a git command in a Git repository than in a downloads folder. Furthermore, a command beginning with 'git commit' is more likely to be succeeded by 'git push' than 'git pull'.
-
-
-
-The specific prompt can hugely influence the accuracy of the model's predictions.
-
-For this reason, we try to find a prompt-template that improves the accuracy.
-
-Which consists of telling the model what it which is an autocompletion and an order what we want the model to do which is to predict the CLI command. Additionally, we add the variable context of the current directory and names of the files in the current directory. 
-
-
-
-Next there is the issue of computational resources. With access to a sufficient cloud infrastructure, even high-end LLMs can be deployed. But this only applies if network access is available. Also, to a lesser extent, network speed can be an issue. 
-
-Therefore, we should consider a locale solution. This  again would limit our available 
-
-resources. Therefore, we have to make a trade-of between accuracy and size of the model.
-
+Finally, we discuss methods to improve this, ranging from further prompt modifications over the use of different models to fine-tuning them. Also, the possible usage of methods to limit the requirements of computational resources are discussed.
