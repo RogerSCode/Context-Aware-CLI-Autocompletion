@@ -1,6 +1,6 @@
 \section{Introduction}
 
-Stochastic Autocompletion systems for the terminal are nothing new, but the recent development of large-language-models(LLMs) allows for new approaches. These LLMs integrate world knowledge, leading to a potential spillover effect that can enhance autocompletion systems.
+Stochastic autocompletion systems for the terminal are nothing new, but the recent development of large-language-models (LLMs) allows for new approaches. These LLMs integrate world knowledge, leading to a potential spillover effect that can enhance autocompletion systems.
 
 
 
@@ -29,9 +29,9 @@ The solution to this issue is to resort to pre-trainded LLMs.
 
 \subsection{Transformer Architecture}
 The paper "Attention is all you need" \cite{NIPS2017_3f5ee243}  introduced the transformer architecture in 2017, which has since become a foundational building block for many state-of-the-art models. They are designed to handle sequential data, making them particularly effective for NLP tasks. Unlike earlier architectures like recurrent neural networks (RNNs) or long short-term memory (LSTM) networks, transformers can process data in parallel rather than sequentially and can outperform those.
-Its novel idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token, in other words, focusing on its relevance. This allows a model to learn long-range dependencies between words in a sentence. The transformer model consists of an encoder and a decoder. The encoder converts the input into a set of vectors representing the semantic information. Positional encoding vectors are added to the embedding vectors to give the model the ability to deduce the distance between two tokens so that the model has information about the position of each token. This is needed because transformers don't process data sequentially. 
+Its novel idea was the introduction of the attention mechanism. A mechanism to weight how significant a token is to another token, in other words, focusing on its relevance. This allows a model to learn long-range dependencies between words in a sentence. The transformer model consists of an encoder and a decoder part. The encoder converts the input into a set of vectors representing the semantic information. Positional encoding vectors are added to the embedding vectors to give the model the ability to deduce the distance between two tokens so that the model has information about the position of each token. This is needed because transformers don't process data sequentially. 
 Decoding is the process of generating output from the encoded input. In the transformer architecture, this process is autoregressive, which means that the model generates one token at a time. Each new token is used together with the previous tokens to generate 
-another token. This is repeated until the end of the sequence is reached.
+another token. This is repeated until the end of the sequence of tokens is reached.
 The order of the tokens is encoded with the addition of positional encodings similar to the encoder.
 
 Since then, it has been used to develop LLMs that set a new standard for NLP tasks.
@@ -65,7 +65,7 @@ For the task of autocompletion, we need a model with at least subword-based toke
 
 
 \section{Setup}\raggedbottom
-In this chapter we list the devices, languages and librarys used for our testsetup.
+In this chapter we list the devices, languages and librarys used for our test setup.
 The laptop described in Table 1 was used simply because it was available. It was used for local tests while larger models were done on the HILBERT, the HPC supercomputer of the HHU. The enviroment had 40GB of RAM available.
 
 
@@ -87,39 +87,51 @@ RAM & 16Gb \\
 \caption{local machine specs }
 \end{table}
 
-the Alpaca test were performed on HPC.
+
 
 %Ubuntu 22.04.3 LTS x86_64
 %ThinkPad L590
 %Intel i7-8565U (8) @ 4.600GHz 
 
-We used a Miniconda 3.1 enviroment
+\subsection{Python and Installed Packages}
+All tests were performed with Python version  3.11.3
+\subsubsection{Miniconda 3.1 Environment}
 
-\begin{itemize}
-\item \begin{verbatim}
-transformers-4.30.2-pyhd8ed1ab_1.conda
-\end{verbatim}
+\begin{table}[h]
+\centering
+\caption{Miniconda Packages}
+\begin{tabular}{|l|l|l|}
+\hline
+Package & Version & Build \\
+\hline
+\hline
+transformers & 4.30.2 & pyhd8ed1ab\_1 \\
+\hline
+tokenizers & 0.13.3 & py38h7d131c9\_0 \\
+\hline
+\end{tabular}
+\end{table}
 
-\item \begin{verbatim}
-tokenizers-0.13.3-py38h7d131c9_0.conda
-\end{verbatim}
-  
-\end{itemize}
+\subsubsection{Pip}
 
-Pip
-\begin{itemize}
-\item \begin{verbatim}
-numpy             1.25.0
-\end{verbatim}
+\begin{table}[h]
+\centering
+\caption{Pip Packages}
+\begin{tabular}{|l|l|}
+\hline
+Package & Version \\
+\hline
+\hline
+numpy & 1.25.0 \\
+\hline
+typing\_extensions & 4.7.0 \\
+\hline
+\end{tabular}
+\end{table}
 
-\item \begin{verbatim}
-typing_extensions 4.7.0
-\end{verbatim}
-  
-\end{itemize}
 
 
-python version  3.11.3
+
 
 
 
@@ -170,11 +182,11 @@ After that the predicted command is then returned.
 
 Since we want to complete CLI commands, we need a model that performs well on autocompletion tasks. So we prefer one whose architecture benefits such a task. 
 
-From a financial perspective, models that are not free to use,are not apropiate which limits the use of non-free APIs. 
+From a financial perspective, models that are not free to use, are not appropriate which limits the use of non-free APIs. 
 
 For local usage we want a sufficiently small model. This however does not apply for cloud usage. 
 
-For practical reasons, we limit ourselves to models that were publicized at the beginning of writing this thesis. So models like LLaMA2 which was publicized during the writing process of this thesis were not considered.
+For practical reasons, we limit ourselves to models that were publicized at the beginning of writing this thesis. So models like LLaMA2\cite{touvron2023llama2} which was publicized during the writing process of this thesis were not considered.
 
 
 
@@ -185,7 +197,7 @@ For practical reasons, we limit ourselves to models that were publicized at the 
 
 Bidirectional Encoder Representations from Transformers or short BERT was introduced  2018  in BERT: Pre-training of Deep Bidirectional Transformers for
 
-Language Understanding \cite{devlin2019bert}. It was the first major Bidirectional model, which means it can use the context of right sided input in addition to left sided input. Unlike most previous models, which could only use left sided input.
+Language Understanding \cite{devlin2019bert}. It was the first major bidirectional model, which means it can use the context of right sided input in addition to left sided input, unlike most previous models, which could only use left sided input.
 
 
  
@@ -203,11 +215,11 @@ Its size consists of approximately 2500 million word which makes it the majority
 However, it is to note that BERT's bidirectional encoding during training and the so encoded knowledge can benefit the predictions  for situations where only one directional encoding is possible.
 
 
-The next point is that BERT is only able to use 512 tokens as context, which limits the size of its prompt length. While the template itself has a fixed number of tokens, the Path is of variable length. As well as the number of files.
+The next point is that BERT is only able to use 512 tokens as context, which limits the size of its prompt length. While the template itself has a fixed number of tokens, the path is of variable length. As well as the number of tokens generated from the names of the files.
 
 
 
-The last issue with this model is the way its encoder handles out-of-vocabulary(OOV) tokens. Since Bert's encoder works with a fixed vocabulary, it will not be able to process words that are not in its vocabulary. This poses a huge issue for named entities. This would include the names of programs, with whom most terminal commands start. As well as the names of files and directories, which are given as context to the model. 
+The last issue with this model is the way its encoder handles out-of-vocabulary (OOV) tokens. Since Bert's encoder works with a fixed vocabulary, it will not be able to process words that are not in its vocabulary. This poses a huge issue for named entities. This would include the names of programs, with whom most terminal commands start. As well as the names of files and directories, which are given as context to the model. 
 
 
 In our specific use case, this would mean that BERT could not use the given context and would be unable to complete some commands reasonably. 
@@ -222,10 +234,12 @@ These arguments lead to the conclusion that BERT is not suitable for this task. 
 \subsubsection{GPT-3/GPT-4}
 
 
-GPT-3 was first published in "Language Models are Few-Shot Learners" on May 28, 2020 by a group of researchers at OpenAI
+GPT-3 was first published in "Language Models are Few-Shot Learners"\cite{brown2020language} on May 28, 2020 by a group of researchers at OpenAI.
+
+GPT-4 was introduced in "GPT-4 Technical Report"\cite{openai2023gpt4} and is the successor of GPT-3.
 
 
-While GPT based models as of now are considered to be the best LLMs. Their size and needed computational power to operate them make them impractical for consumer grade computers. This can be circumvented by the use of the OpenAI API, but this is not free of charge and needs to sent data over the internet, which prohibits its use with sensitive data and cannot be used on capsuled systems. 
+While GPT based models as of now are considered to be the best LLMs, their size and needed computational power to operate them make them impractical for consumer grade computers. This can be circumvented by the use of the OpenAI API, but this is not free of charge and needs to sent data over the internet, which prohibits its use with sensitive data and cannot be used on capsuled systems. 
 
 
 \subsubsection{LLaMA} 
@@ -250,8 +264,8 @@ StackExchange & 2.0\% & 1.03 & 78 GB \\
 \end{tabular}
 \end{table}
 
-The datasets have been preprocessed. The English CommonCrawl  was deduplicated at the line level, and non-English pages and pages not reverenced on Wikipedia have been removed. C4 has been deduplicated and filtered with heuristics like the presence of punctuation and number of words on a webpage. GitHub projects that are distributed under Apache BSD and MIT licenses were used Low quality code and boilerplate code were removed.
-Wikipedia dumps from the June-August 2022 period, covering the languages: bg, ca, cs, da, de, en, es, fr, hr, hu, it, nl, pl, pt, ro, ru, sl, sr, sv, uk. Hyperlinks comments and formatting boilerplate have been removed. The Gutenberg Project corpus and Books3 corpus have been deduplicated and books with an 90\% overlap have been removed. 
+The datasets have been preprocessed. The English CommonCrawl  was deduplicated at the line level, and non-English pages and pages not referenced on Wikipedia have been removed. C4 has been deduplicated and filtered with heuristics like the presence of punctuation and number of words on a webpage. GitHub projects that are distributed under Apache BSD and MIT licenses were used low quality code and boilerplate code were removed.
+Wikipedia dumps from the June-August 2022 period, covering the languages: bg, ca, cs, da, de, en, es, fr, hr, hu, it, nl, pl, pt, ro, ru, sl, sr, sv, uk. Hyperlinks, comments and formatting boilerplate have been removed. The Gutenberg Project corpus and Books3 corpus have been deduplicated and books with an 90\% overlap have been removed. 
 ArXiv Latex files have been filtered by removing anything before the first section, as well as the bibliography. Stack Exchange data includes the high quality questions and answers. 
 
 
@@ -290,7 +304,7 @@ While this model is acceptable for our task, we reject it in favor of Alpaca, wh
 
 \subsubsection{GPT-2}
 
-Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA}. Unlike BERT, it is unidirectional. Its architecture is transformer based. Similar to the GPT model with the modification, the Layer normalization was moved to the input of each sub-block and an additional layer normalization was added after the final self-attention block\cite{Radford2019LanguageMA}.
+Generative Pre-trained Transformer 2 or short GPT-2 was introduced in 2019 in the paper titled "Language Models are Unsupervised Multitask Learners"\cite{Radford2019LanguageMA}. Unlike BERT, it is unidirectional. Its architecture is transformer based. Similar to the GPT model with the modifications, that the layer normalization was moved to the input of each sub-block and an additional layer normalization was added after the final self-attention block\cite{Radford2019LanguageMA}.
 
 
 Its Training data consists of Bookcorpus and Webtext thus containing the same training data as BERT. Additionally, it contains code from GitHub and text from Reddit.
@@ -360,7 +374,7 @@ we will use the Alpaca-7B version because it is the smaller.
 
 
 
-The specific input to guide the behavior of a machine learning model is called a "prompt". The model uses it as context. The way the prompt is worded can heavily influence the behavior of the model. Therefore, we need a prompt that accurately describes the tasks at hand. Which is to complete CLI commands. Therefore, it makes sense to simply tell the model what it is and what we want the model to do. 
+The specific input to guide the behavior of a machine learning model is called a "prompt". The model uses it as context. The way the prompt is worded can heavily influence the behavior of the model. Therefore, we need a prompt that accurately describes the tasks at hand, which is to complete CLI commands. Therefore, it makes sense to simply tell the model what it is and what we want the model to do. 
 
 
 
@@ -420,7 +434,7 @@ A number of prompt combinations have been tested and for simplicity we decided t
 The "You are an autocomplete function. " and "This is an autocomplete function. " tend to provide significantly worse results than other premises. There are less likely to produce a terminal command, but a text about said command.
 
 
-"This is a Linux terminal command. " provides better output but tends to append an explanation of the command. "This is a Linux terminal. " tends to provide the best solutions. 
+"This is a Linux terminal command. " provides better output but tends to append an explanation of the command. "This is a Linux terminal. " Generally offers the best solutions. 
 
 
 
@@ -434,18 +448,17 @@ The file contexts show no significant differences, so "There are the following f
 
 
 
-So the final prompt is: "This is a Linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following Linux terminal command and provide no further explanation for the command: <command>".
+So the final prompt we choose is: "This is a Linux terminal. There are the following files in the current  directory: <files>,Path: <path>, Autocomplete the following Linux terminal command and provide no further explanation for the command: <command>".
 
 
 
 Now that we have the prompt template, we can tend to the tests.
 
 \section{Tests}
-List of commands used
 
 We used the following commands to autocomplete:
 
-"sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"
+"sudo apt", "sudo apt up", "sudo apt in", "ls", "py", "pyt", "pyth", "pytho", "git", "git i", "git in", "git ini", "git co", "git comm"
 
 
 The reasons we chose these are to test four scenarios. First, the relative context independent apt commands. Here we try to take a look how successful the autocompletion can be on a command that is not influenced by its context to have a comparison with commands that are more influenced by their context.
@@ -463,7 +476,7 @@ Third, python based commands. The python command is supposed to run python code,
 Last git based commands. The git commands are heavily influenced depending on where you run them and what files are in the current directory. This however varies from command to command.
 
 
-
+\pagebreak
 
 \begin{table}[ht]
 \centering
@@ -494,12 +507,12 @@ Last git based commands. The git commands are heavily influenced depending on wh
 \caption{List of tested paths}
 \end{table}
 
-For context data we had a simple a mock git repository to see how the predictions of the git based commnads are influenced. The ".deb" files are for the sam reason for the apt based commands.
+For context data we had a simple mock git repository to see how the predictions of the git based commnads are influenced. The ".deb" files are for the same reason for the apt based commands.
 
 
 
 
-\pagebreak
+
 \subsection{Tests with GPT-2}\raggedbottom
 
 All tests with the GPT-2 model were conducted on the laptop mentioned in the setup section.
@@ -509,7 +522,7 @@ Our first test with the model had just the incomplete command as input without a
 
 \subsubsection{Tests with the Prompt-Template}
 
- The apt based commands  worked insofar that it predicted the most commonly used apt commands update and install. also tey contained a lot of followup text relating to the command, or a repetition of text that resembles apt based commands.
+ The apt based commands  worked insofar that it predicted the most commonly used apt commands update and install. Also they contained a lot of followup text relating to the command, or a repetition of text that resembles apt based commands.
 
 
 The ls command gets completed with random parameters 60\% of the time.
@@ -598,12 +611,12 @@ A similar issue sometimes happens with the ls command, but this is still a valid
 The ls command gets completed into a valid command 30\% of the time. The most common invalid prediction was "ls." which was occurring round 30\% of the time.
 
 
-Also, the ls command sometimes gets completed with the Path. For example, "ls" with Path:"/home/user/project" gets completed into "ls -l /home/user/project" 
+Also, the ls command sometimes gets completed with the path. For example, "ls" with Path:"/home/user/project" gets completed into "ls -l /home/user/project" 
 
 
 
 
-With added context, the git based commands 1/5 of the time get completed into a text referencing the mentioned files and directory. Also, two things are noteworthy. The first is that one completion occurred, that clones an existing repository. The other is the only valid occurrence of a completion of "git commit" which was completed from "git" and not from "git co" nor from "git comm".
+With added context, the git based commands in 1/5 of the time get completed into a text referencing the mentioned files and directory. Also, two things are noteworthy. The first is that one completion occurred, that clones an existing repository. The other is the only valid occurrence of a completion of "git commit" which was completed from "git" and not from "git co" nor from "git comm".
 
 \section{Conclusion}
 
@@ -630,7 +643,7 @@ It could be interesting to investigate if and how previous commands influence th
 \subsection{Other Alpaca Versions}
 
 
-Stanford's Alpaca model was created with the 7B version of LLaMA as a base, but LLaMA has bigger versions.  Since the code for the training process and the used training data are publicized by the creators. The same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. The process of fine-tuning the larger models is more expensive than the fine-tuning of the 7B version. The same or similar tests to those already conducted, could be performed with such models. It is noteworthy that, this could not be performed on most consumer devices, but a cloud application might be feasible.
+The 7B version of Stanford's Alpaca model was created with the 7B version of LLaMA as a base\cite{alpaca}, but LLaMA has bigger versions\cite{touvron2023llama}.  Since the code for the training process and the used training data are publicized by the creators, the same process can be used to create larger versions of Alpaca. Which could possibly perform better than the 7B version. The process of fine-tuning the larger models is more expensive than the fine-tuning of the 7B version. The same or similar tests to those already conducted, could be performed with such models. It is noteworthy that, this could not be performed on most consumer devices, but a cloud application might be feasible.
 
 
 
@@ -639,14 +652,14 @@ Stanford's Alpaca model was created with the 7B version of LLaMA as a base, but 
 
 While this was written, LLaMA2 was released.\cite{touvron2023llama2}
 
-LLaMA2 itself could be used as a model. But since the architecture of LLaMA2 remains largely unchanged from its predecessor, LLaMA. It could also be trained like Alpaca. It could be interesting to see if this new model produces a similar outcome or not.
+LLaMA2 itself could be used as a model. But since the architecture of LLaMA2 remains largely unchanged from its predecessor, LLaMA, it could also be trained like Alpaca. It could be interesting to see if this new model produces a similar outcome or not.
 
 
 
 \subsection{Finetuning}
 
 
-In our tests, we concluded that the models used did not produce satisfying results. For this reason, we should consider fine-tuning them. If real-world data is not available. Training data can be generated by AI's such as Chat-GPT. But to mitigate the bias of the model that produces the training's data. Several models should be used to produce training data. However, this doesn't help if the models have shared biases.
+In our tests, we concluded that the models used did not produce satisfying results. For this reason, we should consider fine-tuning them. If real-world data is not available, training data can be generated by AI's such as Chat-GPT. But to mitigate the bias of the model that produces the training's data several models should be used to produce training data. However, this doesn't help if the models have shared biases.
 
 
 %\subsection{Extension of Test Cases}
@@ -666,7 +679,7 @@ The larger the model, the larger the computational resources needed to train and
 
 In the case of LLMs this can be very costly as seen in with our tests with Alpaca. 
 
-Here,  Low-rank adaptation (LoRA) can help us. The idea is to decompose the model's weight-matrix into a lower-dimensional representation, that captures most of the information of the original model. This would reduce the number of parameters greatly. Ideally this would allow us to run larger models like Alpaca on local machines.
+Here,  Low-rank adaptation (LoRA)\cite{hu2021lora} can help us. The idea is to decompose the model's weight-matrix into a lower-dimensional representation, that captures most of the information of the original model. This would reduce the number of parameters greatly. Ideally this would allow us to run larger models like Alpaca on local machines.
 
 
 \subsection{Context Extension to Subdirectories}
