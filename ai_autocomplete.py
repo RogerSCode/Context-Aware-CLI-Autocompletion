@@ -2,7 +2,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, LlamaFor
 import torch
 import sys
 
-
+with open('myfile.txt', 'r') as f:
+    model_name = f.read()
 
 # Load pre-trained model and tokenizer
 model_name = "gpt2"  
