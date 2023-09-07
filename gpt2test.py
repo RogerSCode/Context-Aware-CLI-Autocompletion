@@ -17,7 +17,7 @@ prompt ="This is a linux terminal. There are the following files in the current 
 input_list = ["sudo apt","sudo apt up","sudo apt in","ls","py","pyt","pyth","pytho","git","git i","git in","git ini","git co","git comm"]
 suggested_completions = []
 
-context = True
+prompt_template = True
 
 files = ["","javasdk.deb","geany.deb","tests.py, data.txt ,webserver.py ","webserver.py,config.txt ",".git, .gitignore, README.md, webserver.py, config.txt, tests.py, data.txt ",]
 paths = ["","/home ","/home/user/projekt "]
@@ -25,7 +25,7 @@ order = ["Autocomplete the following linux terminal command and provide no furth
 
 
 
-if context:
+if prompt_template:
     combinations = list(itertools.product(["This is a linux terminal. "],["There are the following files in the current  directory:"],files,paths,order,input_list))
 
 
