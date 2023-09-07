@@ -33,7 +33,7 @@ def print_output(input_text, premises, file_context, files, order, path, autocom
     print("Autocompleted Text:", autocompleted_text)
     print("--------------------------")
 
-context = True
+final_template = True
 
 file_contexts = ["","There are the following files in the current  directory: ", "Files:","These files are in this directory: " ]
 files = ["","javasdk.deb","geany.deb","tests.py, data.txt ,webserver.py ","webserver.py,config.txt ",".git, .gitignore, README.md, webserver.py, config.txt, tests.py, data.txt ",]
@@ -49,7 +49,7 @@ final_prompt = "This is a linux terminal. There are the following files in the c
 
 
 
-if context:
+if final_template:
     combinations = list(itertools.product(["This is a linux terminal. "],["There are the following files in the current  directory:"],files,paths,order,input_texts))
 
 
