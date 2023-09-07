@@ -1,12 +1,18 @@
 #!/bin/bash
 
+
+# run bash shell-complete.sh to start the script
 # This script is used to complete the shell command
 
 
-# Dummy autocomplete function
+
+
+
+
+#  autocomplete function
 autocomplete() {
     local command_so_far=$1
-    local possible_completion=$(python3 heuristic_autocomplete.py "$command_so_far" "$PWD" ) #TODO check if python3 is correct command to call python 
+    local possible_completion=$(python3 ai_autocomplete.py "$command_so_far" "$PWD" ) 
     printf "${command_so_far}${possible_completion}"
 }
 
@@ -14,13 +20,13 @@ record_history() {
     # this function records the command history with the current directory the command was executed in
     local current_directory=$PWD
     local command_so_far=$1
-    python3 db/update_history.py "$current_directory" "$command_so_far"
+    python3 db/historydb/update_history.py "$current_directory" "$command_so_far"
     
 }    
 
 most_recent_command() {
     # this function reads the command history and returns the most recent command
-    local most_recent_command=$(tail -n 1 history.txt)
+    local most_recent_command=$(python3 db/historydb/last_entry.py)
     # remove the directory from the command
     most_recent_command=${most_recent_command#* }
     

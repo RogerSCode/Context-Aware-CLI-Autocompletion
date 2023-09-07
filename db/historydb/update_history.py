@@ -8,7 +8,7 @@ date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
 
-connnection = sqlite3.connect('history.db')
+connnection = sqlite3.connect('db/historydb/history.db')
 cursor = connnection.cursor()
 
 cursor.execute('''insert into history(Path, Command, Date) values(?,?,?)''', (path, command, date))
